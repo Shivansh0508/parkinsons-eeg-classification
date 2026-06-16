@@ -149,3 +149,11 @@ def preprocess_one(path, smooth_fwhm=6):
     statistics are used, so no information leaks from test to train subjects.
     """
     mni, mask = get_mni()
+
+if ANTS_OK:
+        tmp_n4  = os.path.join(CONFIG["CACHE_DIR"], "_tmp_n4.nii.gz")
+        tmp_mni = os.path.join(CONFIG["CACHE_DIR"], "_tmp_mni.nii.gz")
+        nib.save(mni, tmp_mni)
+
+        img_n4 = ants.n4_bias_field_correction(ants.image_read(path), verbose=False)
+        ants.image_write(img_n4, tmp_n4)
