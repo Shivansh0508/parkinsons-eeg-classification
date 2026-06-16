@@ -207,3 +207,13 @@ def preprocess_all(df, cache_dir, force=False):
 
     print(f"\nPreprocessed: {len(volumes)}  |  From cache: {cached}  |  Failed: {len(failed)}")
     return volumes, failed
+
+print("\nPreprocessing (runs once, then loads from cache)...")
+volumes, failed = preprocess_all(subjects_df, CONFIG["CACHE_DIR"])
+
+if failed:
+    subjects_df = subjects_df[~subjects_df.subject_id.isin(failed)].reset_index(drop=True)
+
+y     = subjects_df["label"].values
+sites = subjects_df["site"].values
+print(f"Final dataset: {len(subjects_df)} subjects  PD={y.sum()}  HC={len(y)-y.sum()}")
