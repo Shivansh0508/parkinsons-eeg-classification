@@ -59,3 +59,10 @@ CONFIG = {
 
 for d in [CONFIG["CACHE_DIR"], CONFIG["OUT_DIR"]]:
     os.makedirs(d, exist_ok=True)
+
+hp_files = (glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii.gz")) +
+            glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii")))
+pd_files = (glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii.gz")) +
+            glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii")))
+
+print(f"HP: {len(hp_files)}  |  PD: {len(pd_files)}  |  Total: {len(hp_files)+len(pd_files)}")
