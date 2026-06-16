@@ -111,3 +111,10 @@ df = pd.DataFrame(rows).reset_index(drop=True)
 
 
 subjects_df = build_table(CONFIG["HP_DIR"], CONFIG["PD_DIR"])
+
+ # PREPROCESSING
+# All steps are deterministic transforms applied per-subject independently.
+# No statistics are shared across subjects during preprocessing.
+# Z-score is computed within each subject's own brain mask voxels only —
+# this is NOT a population-level normalisation and introduces no leakage.
+# Cache ensures reproducibility.
