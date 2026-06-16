@@ -44,15 +44,12 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import seaborn as sns
 
-# ===========================================================================
 # CONFIG
-# ===========================================================================
-
 CONFIG = {
-    "HP_DIR"   : r"C:\Users\Shivansh\Downloads\HP",
-    "PD_DIR"   : r"C:\Users\Shivansh\Downloads\PD",
-    "CACHE_DIR": r"C:\Users\Shivansh\Downloads\BrainLat_Cache",
-    "OUT_DIR"  : r"C:\Users\Shivansh\Downloads\BrainLat_Results",
+    "HP_DIR"   : r"C:\Users",
+    "PD_DIR"   : r"C:\Users\PD",
+    "CACHE_DIR": r"C:\Users\BrainLat_Cache",
+    "OUT_DIR"  : r"C:\UsersBrainLat_Results",
     "N_FOLDS"  : 5,
     "SEED"     : 42,
 }
@@ -60,26 +57,21 @@ CONFIG = {
 for d in [CONFIG["CACHE_DIR"], CONFIG["OUT_DIR"]]:
     os.makedirs(d, exist_ok=True)
 
-hp_files = (glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii.gz")) +
-            glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii")))
+hp_files = (glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii.gz")) + glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii")))
 
-pd_files = (glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii.gz")) +
-            glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii")))
+pd_files = (glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii.gz")) + glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii")))
 
 print(f"HP: {len(hp_files)}  |  PD: {len(pd_files)}  |  Total: {len(hp_files)+len(pd_files)}")
 
-if not hp_files:
-    raise FileNotFoundError(f"No MRI files found in {CONFIG['HP_DIR']}")
-if not pd_files:
-    raise FileNotFoundError(f"No MRI files found in {CONFIG['PD_DIR']}")
+if not hp_files:    raise FileNotFoundError(f"No MRI files found in {CONFIG['HP_DIR']}")
+if not pd_files:    raise FileNotFoundError(f"No MRI files found in {CONFIG['PD_DIR']}")
 
 # SUBJECT TABLE
 # Each subject appears exactly once. Site is extracted from the subject ID
 ef build_table(hp_dir, pd_dir):
     rows = []
     for label, folder in [(1, pd_dir), (0, hp_dir)]:
-        for path in sorted(glob.glob(os.path.join(folder, "*.nii.gz")) +
-                           glob.glob(os.path.join(folder, "*.nii"))):
+        for path in sorted(glob.glob(os.path.join(folder, "*.nii.gz")) + glob.glob(os.path.join(folder, "*.nii"))):
             fname = os.path.basename(path)
             sid   = (fname.replace("_T1w.nii.gz", "")
                          .replace("_T1w.nii", "")
@@ -112,10 +104,10 @@ df = pd.DataFrame(rows).reset_index(drop=True)
 
 subjects_df = build_table(CONFIG["HP_DIR"], CONFIG["PD_DIR"])
 
- # PREPROCESSING
+# PREPROCESSING
 # All steps are deterministic transforms applied per-subject independently.
 # No statistics are shared across subjects during preprocessing.
-# Z-score is computed within each subject's own brain mask voxels only —
+# Z-score is computed within each subject's own brain mask voxels only 
 # this is NOT a population-level normalisation and introduces no leakage.
 # Cache ensures reproducibility.
 
