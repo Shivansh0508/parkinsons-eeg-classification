@@ -5,11 +5,10 @@ import ssl
 import urllib3
 
 # Disable SSL verification globally — nilearn atlas downloads fail
-# on Windows with corporate/institutional certificates
 ssl._create_default_https_context = ssl._create_unverified_context
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Patch requests (used internally by nilearn) to skip SSL verify
+# Patch requests to skip SSL verify
 import requests
 from requests.adapters import HTTPAdapter
 _orig_request = requests.Session.request
@@ -28,5 +27,19 @@ import nibabel as nib
 from nilearn import image as nl_image
 from nilearn.maskers import NiftiLabelsMasker, NiftiMasker
 from nilearn.image import smooth_img
-from nilearn.datasets import (load_mni152_template, load_mni152_brain_mask,
-                               fetch_atlas_aal, fetch_atlas_harvard_oxford)
+from nilearn.datasets import (load_mni152_template, load_mni152_brain_mask, fetch_atlas_aal, fetch_atlas_harvard_oxford)
+from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import StratifiedKFold, LeaveOneGroupOut
+from sklearn.decomposition import PCA
+from sklearn.metrics import (accuracy_score, roc_auc_score, confusion_matrix, f1_score, roc_curve, precision_score, recall_score)
+from imblearn.over_sampling import SMOTE
+from imblearn.pipeline import Pipeline as ImbPipeline
+import xgboost as xgb
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+import seaborn as sns
