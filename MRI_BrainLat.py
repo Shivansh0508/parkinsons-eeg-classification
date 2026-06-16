@@ -118,3 +118,13 @@ subjects_df = build_table(CONFIG["HP_DIR"], CONFIG["PD_DIR"])
 # Z-score is computed within each subject's own brain mask voxels only —
 # this is NOT a population-level normalisation and introduces no leakage.
 # Cache ensures reproducibility.
+
+try:
+    import ants
+    ANTS_OK = True
+    print("ANTs available — N4 bias correction + affine MNI registration enabled")
+except ImportError:
+    ANTS_OK = False
+    print("ANTs not found — using nilearn resample fallback")
+
+_MNI, _MASK = None, None
