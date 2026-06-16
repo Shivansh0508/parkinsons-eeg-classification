@@ -169,3 +169,14 @@ reg = ants.registration(
         img_reg = nl_image.resample_to_img(
             nib.load(path), mni,
             interpolation='linear', force_resample=True)
+
+ img_smooth = smooth_img(img_reg, fwhm=smooth_fwhm)
+
+    masker = NiftiMasker(mask_img=mask, standardize=False)
+    data   = masker.fit_transform(img_smooth)[0]
+
+    # Subject-level z-score (uses only this subject's voxels — no leakage)
+    if data.std() > 0:
+        data = (data - data.mean()) / data.std()
+
+    return masker.inverse_transform(data).get_fdata().astype(np.float32)
