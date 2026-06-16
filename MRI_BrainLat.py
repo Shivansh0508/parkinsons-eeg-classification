@@ -66,3 +66,8 @@ pd_files = (glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii.gz")) +
             glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii")))
 
 print(f"HP: {len(hp_files)}  |  PD: {len(pd_files)}  |  Total: {len(hp_files)+len(pd_files)}")
+
+if not hp_files:
+    raise FileNotFoundError(f"No MRI files found in {CONFIG['HP_DIR']}")
+if not pd_files:
+    raise FileNotFoundError(f"No MRI files found in {CONFIG['PD_DIR']}")
