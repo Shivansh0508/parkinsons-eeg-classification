@@ -96,3 +96,18 @@ df = pd.DataFrame(rows).reset_index(drop=True)
         print(f"\nWARNING: {dupes['subject_id'].nunique()} subject ID(s) appear in both folders:")
         print(dupes[["subject_id", "label", "path"]].to_string())
         print()
+        
+        # A subject in both folders means it was placed in both HP and PD by mistake.
+        # Resolution: keep the PD label (label=1) as the ground truth, drop the HC duplicate.
+        # Sort so PD rows (label=1) come first, then drop duplicates keeping first occurrence.
+        df = df.sort_values("label", ascending=False).drop_duplicates(
+            subset="subject_id", keep="first").reset_index(drop=True)
+        print(f"Resolved: kept PD label for duplicated subjects.")
+
+    print(f"Subjects : {len(df)}  |  PD: {(df.label==1).sum()}  |  HC: {(df.label==0).sum()}")
+    print(f"Sites    : {sorted(df.site.unique())}")
+    print(f"Subjects per site:\n{df.groupby(['site','label']).size().unstack(fill_value=0)}")
+    return df
+
+
+subjects_df = build_table(CONFIG["HP_DIR"], CONFIG["PD_DIR"])
