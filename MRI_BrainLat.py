@@ -180,3 +180,17 @@ reg = ants.registration(
         data = (data - data.mean()) / data.std()
 
     return masker.inverse_transform(data).get_fdata().astype(np.float32)
+
+def preprocess_all(df, cache_dir, force=False):
+    volumes, failed = {}, []
+    total = len(df)
+    cached = 0
+
+    for i, row in df.iterrows():
+        sid   = row["subject_id"]
+        fpath = os.path.join(cache_dir, f"{sid}.npy")
+
+        if os.path.exists(fpath) and not force:
+            volumes[sid] = np.load(fpath)
+            cached += 1
+            continue
