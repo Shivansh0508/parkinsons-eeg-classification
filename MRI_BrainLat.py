@@ -87,3 +87,12 @@ ef build_table(hp_dir, pd_dir):
                          .replace(".nii", ""))
             site  = ''.join(c for c in sid.replace("sub-", "") if c.isalpha())
             rows.append(dict(subject_id=sid, label=label, site=site, path=path))
+                               
+df = pd.DataFrame(rows).reset_index(drop=True)
+
+    # Identify duplicates and print them so you can inspect
+    dupes = df[df.duplicated(subset="subject_id", keep=False)]
+    if len(dupes) > 0:
+        print(f"\nWARNING: {dupes['subject_id'].nunique()} subject ID(s) appear in both folders:")
+        print(dupes[["subject_id", "label", "path"]].to_string())
+        print()
