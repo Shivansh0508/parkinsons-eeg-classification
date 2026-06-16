@@ -194,3 +194,16 @@ def preprocess_all(df, cache_dir, force=False):
             volumes[sid] = np.load(fpath)
             cached += 1
             continue
+
+ try:
+            vol = preprocess_one(row["path"])
+            np.save(fpath, vol)
+            volumes[sid] = vol
+            done = cached + len(volumes) - cached
+            print(f"  [{len(volumes)}/{total}] {sid}", end='\r')
+        except Exception as e:
+            print(f"\n  FAIL {sid}: {e}")
+            failed.append(sid)
+
+    print(f"\nPreprocessed: {len(volumes)}  |  From cache: {cached}  |  Failed: {len(failed)}")
+    return volumes, failed
