@@ -128,3 +128,10 @@ except ImportError:
     print("ANTs not found — using nilearn resample fallback")
 
 _MNI, _MASK = None, None
+
+def get_mni():
+    global _MNI, _MASK
+    if _MNI is None:
+        _MNI  = load_mni152_template(resolution=2)
+        _MASK = load_mni152_brain_mask(resolution=2)
+    return _MNI, _MASK
