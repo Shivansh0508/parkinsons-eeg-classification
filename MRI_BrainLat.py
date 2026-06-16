@@ -157,3 +157,15 @@ if ANTS_OK:
 
         img_n4 = ants.n4_bias_field_correction(ants.image_read(path), verbose=False)
         ants.image_write(img_n4, tmp_n4)
+
+reg = ants.registration(
+            fixed=ants.image_read(tmp_mni),
+            moving=ants.image_read(tmp_n4),
+            type_of_transform='Affine',
+            verbose=False)
+        img_reg = nib.Nifti1Image(
+            reg['warpedmovout'].numpy().astype(np.float32), mni.affine)
+    else:
+        img_reg = nl_image.resample_to_img(
+            nib.load(path), mni,
+            interpolation='linear', force_resample=True)
