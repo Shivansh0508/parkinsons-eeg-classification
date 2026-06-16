@@ -43,3 +43,19 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import seaborn as sns
+
+# ===========================================================================
+# CONFIG
+# ===========================================================================
+
+CONFIG = {
+    "HP_DIR"   : r"C:\Users\Shivansh\Downloads\HP",
+    "PD_DIR"   : r"C:\Users\Shivansh\Downloads\PD",
+    "CACHE_DIR": r"C:\Users\Shivansh\Downloads\BrainLat_Cache",
+    "OUT_DIR"  : r"C:\Users\Shivansh\Downloads\BrainLat_Results",
+    "N_FOLDS"  : 5,
+    "SEED"     : 42,
+}
+
+for d in [CONFIG["CACHE_DIR"], CONFIG["OUT_DIR"]]:
+    os.makedirs(d, exist_ok=True)
