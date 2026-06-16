@@ -135,3 +135,17 @@ def get_mni():
         _MNI  = load_mni152_template(resolution=2)
         _MASK = load_mni152_brain_mask(resolution=2)
     return _MNI, _MASK
+
+def preprocess_one(path, smooth_fwhm=6):
+    """
+    Per-subject preprocessing pipeline:
+      1. N4 bias field correction  (ANTs, or skipped if unavailable)
+      2. Affine registration to MNI152 2mm space
+      3. Gaussian smoothing 6mm FWHM
+      4. Brain masking with MNI152 gray-matter mask
+      5. Z-score intensity normalisation within this subject's masked voxels
+
+    Step 5 uses only this subject's own voxel distribution — no population
+    statistics are used, so no information leaks from test to train subjects.
+    """
+    mni, mask = get_mni()
