@@ -62,6 +62,7 @@ for d in [CONFIG["CACHE_DIR"], CONFIG["OUT_DIR"]]:
 
 hp_files = (glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii.gz")) +
             glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii")))
+
 pd_files = (glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii.gz")) +
             glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii")))
 
@@ -71,3 +72,18 @@ if not hp_files:
     raise FileNotFoundError(f"No MRI files found in {CONFIG['HP_DIR']}")
 if not pd_files:
     raise FileNotFoundError(f"No MRI files found in {CONFIG['PD_DIR']}")
+
+# SUBJECT TABLE
+# Each subject appears exactly once. Site is extracted from the subject ID
+ef build_table(hp_dir, pd_dir):
+    rows = []
+    for label, folder in [(1, pd_dir), (0, hp_dir)]:
+        for path in sorted(glob.glob(os.path.join(folder, "*.nii.gz")) +
+                           glob.glob(os.path.join(folder, "*.nii"))):
+            fname = os.path.basename(path)
+            sid   = (fname.replace("_T1w.nii.gz", "")
+                         .replace("_T1w.nii", "")
+                         .replace(".nii.gz", "")
+                         .replace(".nii", ""))
+            site  = ''.join(c for c in sid.replace("sub-", "") if c.isalpha())
+            rows.append(dict(subject_id=sid, label=label, site=site, path=path))
