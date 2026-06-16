@@ -170,8 +170,7 @@ reg = ants.registration(
     # Subject-level z-score (uses only this subject's voxels — no leakage)
     if data.std() > 0:
         data = (data - data.mean()) / data.std()
-
-    return masker.inverse_transform(data).get_fdata().astype(np.float32)
+ return masker.inverse_transform(data).get_fdata().astype(np.float32)
 
 def preprocess_all(df, cache_dir, force=False):
     volumes, failed = {}, []
