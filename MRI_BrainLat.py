@@ -18,3 +18,15 @@ def _no_ssl_request(self, method, url, **kwargs):
     return _orig_request(self, method, url, **kwargs)
 requests.Session.request = _no_ssl_request
 
+import glob
+import warnings
+import numpy as np
+import pandas as pd
+warnings.filterwarnings('ignore')
+
+import nibabel as nib
+from nilearn import image as nl_image
+from nilearn.maskers import NiftiLabelsMasker, NiftiMasker
+from nilearn.image import smooth_img
+from nilearn.datasets import (load_mni152_template, load_mni152_brain_mask,
+                               fetch_atlas_aal, fetch_atlas_harvard_oxford)
