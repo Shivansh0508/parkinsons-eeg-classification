@@ -76,3 +76,35 @@ This repository contains three independent Parkinson's Disease classification pi
 - Supports development of robust PD detection pipelines
 
 ---
+
+---
+
+## Methodology
+
+### EEG Pipeline
+
+#### Preprocessing
+
+- Bandpass Filtering
+- Common Average Referencing (CAR)
+- Artifact Rejection
+- Epoch Segmentation
+- Channel Standardization
+
+#### Feature Extraction
+
+- Band Power Features
+  - Delta
+  - Theta
+  - Alpha
+  - Beta
+  - Gamma
+
+- Relative Band Powers
+- Spectral Ratios
+- Spectral Entropy
+- Permutation Entropy
+- Hjorth Parameters
+- Spectral Edge Frequency
+- FOOOF Features
+- Functional Connectivity (PLV)
