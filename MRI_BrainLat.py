@@ -208,3 +208,7 @@ if failed:
 y     = subjects_df["label"].values
 sites = subjects_df["site"].values
 print(f"Final dataset: {len(subjects_df)} subjects  PD={y.sum()}  HC={len(y)-y.sum()}")
+
+# FEATURE EXTRACTION
+# AAL (116 regions) + Harvard-Oxford subcortical (21 regions) = 137 features
+# Each masker is fit on the MNI atlas image — NOT on the subject data.
