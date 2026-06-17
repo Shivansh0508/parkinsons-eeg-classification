@@ -52,3 +52,27 @@ This repository contains three independent Parkinson's Disease classification pi
 ```
 
 ---
+
+## Datasets
+
+### OpenNeuro EEG Dataset (DS007526)
+
+- Modality: EEG
+- Task: Resting-State EEG
+- Subjects: Parkinson's Disease and Healthy Controls
+- Source: OpenNeuro
+
+### PPMI Dataset
+
+- Modality: MRI
+- Source: Parkinson's Progression Markers Initiative (PPMI)
+- Subjects: PD and Healthy Controls
+- Used for MRI-based classification and benchmarking
+
+### BrainLAT Dataset
+
+- Modality: MRI
+- Used for external validation and comparative analysis
+- Supports development of robust PD detection pipelines
+
+---
