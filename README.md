@@ -108,3 +108,30 @@ This repository contains three independent Parkinson's Disease classification pi
 - Spectral Edge Frequency
 - FOOOF Features
 - Functional Connectivity (PLV)
+
+#### Classification
+
+- Logistic Regression
+- Support Vector Machine (SVM)
+- XGBoost
+- LightGBM
+- Ensemble Learning
+
+---
+
+### MRI Pipeline
+
+#### Preprocessing
+
+- Skull Stripping
+- Intensity Normalization
+- Registration
+- Resampling
+
+#### Feature Engineering
+
+- Radiomic Features
+- Texture Features
+- Shape Features
+- Deep Learning Features
+
