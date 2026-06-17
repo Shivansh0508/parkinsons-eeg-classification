@@ -4,7 +4,7 @@ os.environ["PYTHONUTF8"] = "1"
 import ssl
 import urllib3
 
-# Disable SSL verification globally — nilearn atlas downloads fail
+# Disable SSL verification globally - nilearn atlas downloads fail
 ssl._create_default_https_context = ssl._create_unverified_context
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -114,10 +114,10 @@ subjects_df = build_table(CONFIG["HP_DIR"], CONFIG["PD_DIR"])
 try:
     import ants
     ANTS_OK = True
-    print("ANTs available — N4 bias correction + affine MNI registration enabled")
+    print("ANTs available -N4 bias correction + affine MNI registration enabled")
 except ImportError:
     ANTS_OK = False
-    print("ANTs not found — using nilearn resample fallback")
+    print("ANTs not found -using nilearn resample fallback")
 
 _MNI, _MASK = None, None
 
@@ -137,7 +137,7 @@ def preprocess_one(path, smooth_fwhm=6):
       4. Brain masking with MNI152 gray-matter mask
       5. Z-score intensity normalisation within this subject's masked voxels
 
-    Step 5 uses only this subject's own voxel distribution — no population
+    Step 5 uses only this subject's own voxel distribution -no population
     statistics are used, so no information leaks from test to train subjects.
     """
     mni, mask = get_mni()
@@ -167,7 +167,7 @@ reg = ants.registration(
     masker = NiftiMasker(mask_img=mask, standardize=False)
     data   = masker.fit_transform(img_smooth)[0]
 
-    # Subject-level z-score (uses only this subject's voxels — no leakage)
+    # Subject-level z-score (uses only this subject's voxels -no leakage)
     if data.std() > 0:
         data = (data - data.mean()) / data.std()
  return masker.inverse_transform(data).get_fdata().astype(np.float32)
@@ -211,13 +211,13 @@ print(f"Final dataset: {len(subjects_df)} subjects  PD={y.sum()}  HC={len(y)-y.s
 
 # FEATURE EXTRACTION
 # AAL (116 regions) + Harvard-Oxford subcortical (21 regions) = 137 features
-# Each masker is fit on the MNI atlas image — NOT on the subject data.
+# Each masker is fit on the MNI atlas image -NOT on the subject data.
 
 def find_local_atlas(nilearn_data_dir, patterns):
     """
     Search nilearn_data_dir recursively for a .nii or .nii.gz file whose
     name contains any of the given patterns. Returns first match or None.
-    Only matches image files — never .xml, .txt, .csv etc.
+    Only matches image files -never .xml, .txt, .csv etc.
     """
     for root, dirs, files in os.walk(nilearn_data_dir):
         for fname in files:
@@ -231,10 +231,10 @@ def find_local_atlas(nilearn_data_dir, patterns):
 def extract_atlas_features(df, volumes):
     """
     Extracts mean signal per brain atlas region for each subject.
-    Maskers are fit on the atlas label image (fixed template) — not on
-    subject data — so no leakage regardless of train/test split.
+    Maskers are fit on the atlas label image (fixed template) -not on
+    subject data -so no leakage regardless of train/test split.
 
-    Both atlases are loaded from local disk only — no network calls.
+    Both atlases are loaded from local disk only -no network calls.
     If a local file is not found the function raises a clear error
     telling you exactly where to place the file.
     """
@@ -283,10 +283,10 @@ if not aal_region_names:
         "HarvardOxford-sub-maxprob-thr50-1mm"])
 
 if ho_path is None:
-        # Try fetching with SSL disabled — HO atlas is on FSL servers which
+        # Try fetching with SSL disabled -HO atlas is on FSL servers which
         # tend to work even with the corporate cert issue
         try:
-            print("HO atlas not found locally — attempting download...")
+            print("HO atlas not found locally -attempting download...")
             ho     = fetch_atlas_harvard_oxford('sub-maxprob-thr25-2mm')
             ho_res = nl_image.resample_to_img(ho.maps, mni, interpolation='nearest')
         except Exception:
