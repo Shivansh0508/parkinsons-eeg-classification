@@ -315,3 +315,14 @@ else:
         img = nib.Nifti1Image(volumes[row["subject_id"]], mni.affine)
         feats_aal.append(m_aal.transform(img).ravel())
         feats_ho.append(m_ho.transform(img).ravel())
+
+    X_aal  = np.vstack(feats_aal)
+    X_ho   = np.vstack(feats_ho)
+    X_comb = np.hstack([X_aal, X_ho])
+
+    print(f"AAL: {X_aal.shape}  |  HO: {X_ho.shape}  |  Combined: {X_comb.shape}")
+    return X_comb, X_aal, aal_region_names
+
+
+print("\nExtracting atlas features...")
+X_atlas, X_aal_only, aal_labels = extract_atlas_features(subjects_df, volumes)
