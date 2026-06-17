@@ -1,1 +1,26 @@
-# parkinsons-eeg-classification
+# Parkinson's Disease Detection using EEG and MRI
+
+A comprehensive machine learning and deep learning framework for Parkinson's Disease (PD) detection using multiple neuroimaging and neurophysiological datasets.
+
+---
+
+## Overview
+
+This repository contains three independent Parkinson's Disease classification pipelines developed using publicly available datasets:
+
+1. **OpenNeuro EEG Dataset (DS007526)**
+   - Resting-state EEG recordings
+   - Healthy Controls (HC) vs Parkinson's Disease (PD)
+   - Signal preprocessing, feature extraction, and machine learning classification
+
+2. **PPMI MRI Dataset**
+   - Structural T1-weighted MRI scans
+   - PD vs Healthy Controls
+   - Deep learning and radiomics-based classification
+
+3. **BrainLAT MRI Dataset**
+   - Brain MRI-based Parkinson's Disease detection
+   - Feature extraction and classification pipeline
+   - Benchmark comparison against published studies
+
+---
