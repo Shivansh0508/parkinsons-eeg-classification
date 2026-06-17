@@ -254,3 +254,13 @@ def extract_atlas_features(df, volumes):
             "AAL.nii not found. Expected at:\n"
             r"  C:\Users\nilearn_data\aal\atlas\AAL.nii")
    
+print(f"AAL: loaded from {aal_path}")
+    aal_img = nib.load(aal_path)
+    aal_res = nl_image.resample_to_img(aal_img, mni, interpolation='nearest')
+
+    xml_path = aal_path.replace(".nii", ".xml").replace(".NII", ".xml")
+    if os.path.exists(xml_path):
+        import xml.etree.ElementTree as ET
+        tree = ET.parse(xml_path)
+        aal_region_names = [el.text.strip()
+                            for el in tree.findall(".//label/name")]
