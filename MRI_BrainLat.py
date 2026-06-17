@@ -326,3 +326,8 @@ else:
 
 print("\nExtracting atlas features...")
 X_atlas, X_aal_only, aal_labels = extract_atlas_features(subjects_df, volumes)
+
+n_pd      = int(y.sum())
+n_hc      = int(len(y) - n_pd)
+scale_pos = n_hc / n_pd
+print(f"Class ratio HC/PD = {scale_pos:.2f}  (used as XGBoost scale_pos_weight)")
