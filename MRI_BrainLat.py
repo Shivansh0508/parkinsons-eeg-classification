@@ -227,3 +227,16 @@ def find_local_atlas(nilearn_data_dir, patterns):
                 if pat.lower() in fname.lower():
                     return os.path.join(root, fname)
     return None
+
+def extract_atlas_features(df, volumes):
+    """
+    Extracts mean signal per brain atlas region for each subject.
+    Maskers are fit on the atlas label image (fixed template) — not on
+    subject data — so no leakage regardless of train/test split.
+
+    Both atlases are loaded from local disk only — no network calls.
+    If a local file is not found the function raises a clear error
+    telling you exactly where to place the file.
+    """
+    mni, _ = get_mni()
+    nilearn_dir = r"C:\Users\Shivansh\nilearn_data"
