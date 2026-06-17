@@ -199,3 +199,42 @@ Performance metrics reported:
 - Investigate explainable AI for neurological disorder classification.
 - Build reproducible and clinically relevant ML pipelines.
 
+---
+
+## Tech Stack
+
+- Python
+- NumPy
+- Pandas
+- Scikit-Learn
+- MNE
+- XGBoost
+- LightGBM
+- PyTorch
+- TensorFlow
+- MONAI
+- Nilearn
+- Matplotlib
+
+---
+
+## Citation
+
+If you use this repository in your research, please cite the corresponding datasets:
+
+- OpenNeuro DS007526
+- Parkinson's Progression Markers Initiative (PPMI)
+- BrainLAT
+
+---
+
+## Author
+
+**Shivansh Saxena**  
+B.Tech Computer Science, BITS Pilani (2027)
+
+[LinkedIn](https://www.linkedin.com/)
+[GitHub](https://github.com/)
+
+---
+
