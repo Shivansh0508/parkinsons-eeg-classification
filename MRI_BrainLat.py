@@ -239,4 +239,18 @@ def extract_atlas_features(df, volumes):
     telling you exactly where to place the file.
     """
     mni, _ = get_mni()
-    nilearn_dir = r"C:\Users\Shivansh\nilearn_data"
+    nilearn_dir = r"C:\Users\nilearn_data"
+
+    # AAL atlas
+
+ confirmed = r"C:\Users\nilearn_data\aal\atlas\AAL.nii"
+    if os.path.exists(confirmed):
+        aal_path = confirmed
+    else:
+        aal_path = find_local_atlas(nilearn_dir, ["AAL.nii", "AAL_MNI_V4.nii",
+                                                   "aal.nii", "ROI_MNI"])
+    if aal_path is None:
+        raise FileNotFoundError(
+            "AAL.nii not found. Expected at:\n"
+            r"  C:\Users\nilearn_data\aal\atlas\AAL.nii")
+   
