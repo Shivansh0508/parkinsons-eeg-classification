@@ -212,3 +212,18 @@ print(f"Final dataset: {len(subjects_df)} subjects  PD={y.sum()}  HC={len(y)-y.s
 # FEATURE EXTRACTION
 # AAL (116 regions) + Harvard-Oxford subcortical (21 regions) = 137 features
 # Each masker is fit on the MNI atlas image — NOT on the subject data.
+
+def find_local_atlas(nilearn_data_dir, patterns):
+    """
+    Search nilearn_data_dir recursively for a .nii or .nii.gz file whose
+    name contains any of the given patterns. Returns first match or None.
+    Only matches image files — never .xml, .txt, .csv etc.
+    """
+    for root, dirs, files in os.walk(nilearn_data_dir):
+        for fname in files:
+            if not (fname.endswith(".nii") or fname.endswith(".nii.gz")):
+                continue
+            for pat in patterns:
+                if pat.lower() in fname.lower():
+                    return os.path.join(root, fname)
+    return None
