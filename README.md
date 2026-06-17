@@ -227,3 +227,22 @@ B.Tech Computer Science, BITS Pilani (2027)
 
 ---
 
+---
+
+## Author
+
+<p align="left">
+  <b>Shivansh Saxena</b> - B.Tech Computer Science, BITS Pilani (2027)
+</p>
+
+<p align="left">
+  <a href="YOUR_LINKEDIN_URL">
+    <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin">
+  </a>
+  <a href="YOUR_PORTFOLIO_URL">
+    <img src="https://img.shields.io/badge/Portfolio-1f6feb?style=for-the-badge">
+  </a>
+  <a href="https://github.com/YOUR_USERNAME">
+    <img src="https://img.shields.io/badge/GitHub-black?style=for-the-badge&logo=github">
+  </a>
+</p>
