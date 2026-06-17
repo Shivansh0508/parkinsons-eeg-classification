@@ -281,3 +281,12 @@ if not aal_region_names:
         "HarvardOxford-sub-maxprob-thr25-1mm",
         "HarvardOxford-sub-maxprob-thr50-2mm",
         "HarvardOxford-sub-maxprob-thr50-1mm"])
+
+if ho_path is None:
+        # Try fetching with SSL disabled — HO atlas is on FSL servers which
+        # tend to work even with the corporate cert issue
+        try:
+            print("HO atlas not found locally — attempting download...")
+            ho     = fetch_atlas_harvard_oxford('sub-maxprob-thr25-2mm')
+            ho_res = nl_image.resample_to_img(ho.maps, mni, interpolation='nearest')
+        except Exception:
