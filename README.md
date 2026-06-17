@@ -29,25 +29,14 @@ This repository contains three independent Parkinson's Disease classification pi
 
 ```text
 ├── OpenNeuro_EEG/
-│   ├── preprocessing/
-│   ├── feature_extraction/
-│   ├── classification/
-│   └── results/
+│   
 │
 ├── PPMI_MRI/
-│   ├── preprocessing/
-│   ├── radiomics/
-│   ├── deep_learning/
-│   └── results/
+│ 
 │
 ├── BrainLAT_MRI/
-│   ├── preprocessing/
-│   ├── feature_extraction/
-│   ├── models/
-│   └── results/
-│
-├── notebooks/
-├── figures/
+│ 
+
 └── README.md
 ```
 
