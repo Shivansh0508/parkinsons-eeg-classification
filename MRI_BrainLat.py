@@ -300,3 +300,18 @@ if ho_path is None:
             X_aal = np.vstack(feats_aal)
             print(f"AAL only: {X_aal.shape}")
             return X_aal, X_aal, aal_region_names
+
+else:
+        print(f"HO: loaded from {ho_path}")
+        ho_res = nl_image.resample_to_img(nib.load(ho_path), mni,
+                                          interpolation='nearest')
+
+    m_ho = NiftiLabelsMasker(labels_img=ho_res, standardize=False,
+                             strategy='mean', resampling_target=None)
+    m_ho.fit()
+
+    feats_aal, feats_ho = [], []
+    for _, row in df.iterrows():
+        img = nib.Nifti1Image(volumes[row["subject_id"]], mni.affine)
+        feats_aal.append(m_aal.transform(img).ravel())
+        feats_ho.append(m_ho.transform(img).ravel())
