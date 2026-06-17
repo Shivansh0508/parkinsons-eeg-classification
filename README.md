@@ -135,3 +135,67 @@ This repository contains three independent Parkinson's Disease classification pi
 - Shape Features
 - Deep Learning Features
 
+#### Classification
+
+- Logistic Regression
+- Support Vector Machine (SVM)
+- XGBoost
+- LightGBM
+- Ensemble Learning
+
+---
+
+### MRI Pipeline
+
+#### Preprocessing
+
+- Skull Stripping
+- Intensity Normalization
+- Registration
+- Resampling
+
+#### Feature Engineering
+
+- Radiomic Features
+- Texture Features
+- Shape Features
+- Deep Learning Features
+
+#### Classification
+
+- Random Forest
+- XGBoost
+- CNN
+- ResNet
+- Vision Transformers
+
+---
+
+## Results
+
+| Dataset | Modality | Task |
+|----------|----------|----------|
+| OpenNeuro DS007526 | EEG | PD vs HC |
+| PPMI | MRI | PD vs HC |
+| BrainLAT | MRI | PD vs HC |
+
+Performance metrics reported:
+
+- Accuracy
+- AUC-ROC
+- Precision
+- Recall
+- F1 Score
+- Sensitivity
+- Specificity
+
+---
+
+## Research Goals
+
+- Develop robust Parkinson's Disease detection systems.
+- Compare EEG and MRI-based approaches.
+- Benchmark against published literature.
+- Investigate explainable AI for neurological disorder classification.
+- Build reproducible and clinically relevant ML pipelines.
+
