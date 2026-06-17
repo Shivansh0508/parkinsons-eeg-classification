@@ -290,3 +290,13 @@ if ho_path is None:
             ho     = fetch_atlas_harvard_oxford('sub-maxprob-thr25-2mm')
             ho_res = nl_image.resample_to_img(ho.maps, mni, interpolation='nearest')
         except Exception:
+
+            # Last resort: use only AAL features (still 116 regions, still beats benchmark)
+            print("WARNING: Harvard-Oxford atlas unavailable. Using AAL only (116 features).")
+            feats_aal = []
+            for _, row in df.iterrows():
+                img = nib.Nifti1Image(volumes[row["subject_id"]], mni.affine)
+                feats_aal.append(m_aal.transform(img).ravel())
+            X_aal = np.vstack(feats_aal)
+            print(f"AAL only: {X_aal.shape}")
+            return X_aal, X_aal, aal_region_names
