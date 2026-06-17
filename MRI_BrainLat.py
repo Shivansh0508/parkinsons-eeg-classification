@@ -264,3 +264,13 @@ print(f"AAL: loaded from {aal_path}")
         tree = ET.parse(xml_path)
         aal_region_names = [el.text.strip()
                             for el in tree.findall(".//label/name")]
+
+if not aal_region_names:
+            aal_region_names = [el.text.strip() for el in tree.iter() if el.text]
+    else:
+        n_aal_regions    = int(np.unique(aal_res.get_fdata()).max())
+        aal_region_names = [f"AAL_{i}" for i in range(1, n_aal_regions + 1)]
+
+    m_aal = NiftiLabelsMasker(labels_img=aal_res, standardize=False,
+                              strategy='mean', resampling_target=None)
+    m_aal.fit()
