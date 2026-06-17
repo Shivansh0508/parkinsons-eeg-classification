@@ -274,3 +274,10 @@ if not aal_region_names:
     m_aal = NiftiLabelsMasker(labels_img=aal_res, standardize=False,
                               strategy='mean', resampling_target=None)
     m_aal.fit()
+
+    # Harvard-Oxford subcortical atlas
+    ho_path = find_local_atlas(nilearn_dir, [
+        "HarvardOxford-sub-maxprob-thr25-2mm",
+        "HarvardOxford-sub-maxprob-thr25-1mm",
+        "HarvardOxford-sub-maxprob-thr50-2mm",
+        "HarvardOxford-sub-maxprob-thr50-1mm"])
