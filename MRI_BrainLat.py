@@ -242,17 +242,14 @@ def extract_atlas_features(df, volumes):
     nilearn_dir = r"C:\Users\nilearn_data"
 
     # AAL atlas
-
  confirmed = r"C:\Users\nilearn_data\aal\atlas\AAL.nii"
     if os.path.exists(confirmed):
         aal_path = confirmed
     else:
-        aal_path = find_local_atlas(nilearn_dir, ["AAL.nii", "AAL_MNI_V4.nii",
-                                                   "aal.nii", "ROI_MNI"])
+        aal_path = find_local_atlas(nilearn_dir, ["AAL.nii", "AAL_MNI_V4.nii", "aal.nii", "ROI_MNI"])
     if aal_path is None:
-        raise FileNotFoundError(
-            "AAL.nii not found. Expected at:\n"
-            r"  C:\Users\nilearn_data\aal\atlas\AAL.nii")
+        raise FileNotFoundError( "AAL.nii not found. Expected at:\n"
+                                r"  C:\Users\nilearn_data\aal\atlas\AAL.nii")
    
 print(f"AAL: loaded from {aal_path}")
     aal_img = nib.load(aal_path)
@@ -265,8 +262,7 @@ print(f"AAL: loaded from {aal_path}")
         aal_region_names = [el.text.strip()
                             for el in tree.findall(".//label/name")]
 
-if not aal_region_names:
-            aal_region_names = [el.text.strip() for el in tree.iter() if el.text]
+if not aal_region_names: aal_region_names = [el.text.strip() for el in tree.iter() if el.text]
     else:
         n_aal_regions    = int(np.unique(aal_res.get_fdata()).max())
         aal_region_names = [f"AAL_{i}" for i in range(1, n_aal_regions + 1)]
@@ -283,15 +279,14 @@ if not aal_region_names:
         "HarvardOxford-sub-maxprob-thr50-1mm"])
 
 if ho_path is None:
-        # Try fetching with SSL disabled -HO atlas is on FSL servers which
-        # tend to work even with the corporate cert issue
+        # Try fetching with SSL disabled 
         try:
             print("HO atlas not found locally -attempting download...")
             ho     = fetch_atlas_harvard_oxford('sub-maxprob-thr25-2mm')
             ho_res = nl_image.resample_to_img(ho.maps, mni, interpolation='nearest')
         except Exception:
 
-            # Last resort: use only AAL features (still 116 regions, still beats benchmark)
+            # Last resort: use only AAL features
             print("WARNING: Harvard-Oxford atlas unavailable. Using AAL only (116 features).")
             feats_aal = []
             for _, row in df.iterrows():
@@ -303,11 +298,9 @@ if ho_path is None:
 
 else:
         print(f"HO: loaded from {ho_path}")
-        ho_res = nl_image.resample_to_img(nib.load(ho_path), mni,
-                                          interpolation='nearest')
+        ho_res = nl_image.resample_to_img(nib.load(ho_path), mni, interpolation='nearest')
 
-    m_ho = NiftiLabelsMasker(labels_img=ho_res, standardize=False,
-                             strategy='mean', resampling_target=None)
+    m_ho = NiftiLabelsMasker(labels_img=ho_res, standardize=False, strategy='mean', resampling_target=None)
     m_ho.fit()
 
     feats_aal, feats_ho = [], []
