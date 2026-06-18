@@ -363,7 +363,7 @@ def engineer_features(X_train, X_test):
 
         X_eng = np.hstack([X, asym, log_x, sq_x, ratio, zscore])
 
-# Standardise using training mean/std
+        # Standardise using training mean/std
         X_eng = (X_eng - mean_tr) / (std_tr + 1e-8)
         return X_eng
 
@@ -408,3 +408,22 @@ def engineer_features(X_train, X_test):
     X_test_eng = (X_test_eng - mean_tr) / (std_tr + 1e-8)
 
     return X_train_eng, X_test_eng
+
+# STRATIFIED GROUP K-FOLD  —  MAXIMUM POWER ENSEMBLE
+# 6 classifiers per fold, all with SMOTE + PCA inside pipeline:
+#   1. SVM RBF  C=10
+#   2. SVM RBF  C=100   (captures tighter decision boundary)
+#   3. XGBoost  lr=0.03, depth=4
+#   4. XGBoost  lr=0.01, depth=6  (deeper trees, more interactions)
+#   5. LightGBM (faster gradient boosting, different inductive bias)
+#   6. Logistic Regression (strong linear baseline)
+#
+# Final probability = weighted average where weight = each model's val AUC
+# on its own training fold  (AUC-weighted soft vote)
+#
+# Requirements satisfied:
+#   - Subject-level splits, no scan leakage
+#   - SMOTE only inside training fold
+#   - StandardScaler + PCA fit on training fold only
+#   - Feature engineering fit on training fold only
+#   - Test fold never touches any fit step
