@@ -56,13 +56,9 @@ CONFIG = {
 
 for d in [CONFIG["CACHE_DIR"], CONFIG["OUT_DIR"]]:
     os.makedirs(d, exist_ok=True)
-
 hp_files = (glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii.gz")) + glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii")))
-
 pd_files = (glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii.gz")) + glob.glob(os.path.join(CONFIG["PD_DIR"], "*.nii")))
-
 print(f"HP: {len(hp_files)}  |  PD: {len(pd_files)}  |  Total: {len(hp_files)+len(pd_files)}")
-
 if not hp_files:    raise FileNotFoundError(f"No MRI files found in {CONFIG['HP_DIR']}")
 if not pd_files:    raise FileNotFoundError(f"No MRI files found in {CONFIG['PD_DIR']}")
 
@@ -79,7 +75,6 @@ ef build_table(hp_dir, pd_dir):
                          .replace(".nii", ""))
             site  = ''.join(c for c in sid.replace("sub-", "") if c.isalpha())
             rows.append(dict(subject_id=sid, label=label, site=site, path=path))
-                               
 df = pd.DataFrame(rows).reset_index(drop=True)
 
     # Identify duplicates and print them so you can inspect
@@ -95,13 +90,10 @@ df = pd.DataFrame(rows).reset_index(drop=True)
         df = df.sort_values("label", ascending=False).drop_duplicates(
             subset="subject_id", keep="first").reset_index(drop=True)
         print(f"Resolved: kept PD label for duplicated subjects.")
-
     print(f"Subjects : {len(df)}  |  PD: {(df.label==1).sum()}  |  HC: {(df.label==0).sum()}")
     print(f"Sites    : {sorted(df.site.unique())}")
     print(f"Subjects per site:\n{df.groupby(['site','label']).size().unstack(fill_value=0)}")
     return df
-
-
 subjects_df = build_table(CONFIG["HP_DIR"], CONFIG["PD_DIR"])
 
 # PREPROCESSING
@@ -117,7 +109,6 @@ try:
 except ImportError:
     ANTS_OK = False
     print("ANTs not found -using nilearn resample fallback")
-
 _MNI, _MASK = None, None
 
 def get_mni():
@@ -128,17 +119,14 @@ def get_mni():
     return _MNI, _MASK
 
 def preprocess_one(path, smooth_fwhm=6):
-    """
-    Per-subject preprocessing pipeline:
+    """  Per-subject preprocessing pipeline:
       1. N4 bias field correction  (ANTs, or skipped if unavailable)
       2. Affine registration to MNI152 2mm space
       3. Gaussian smoothing 6mm FWHM
       4. Brain masking with MNI152 gray-matter mask
       5. Z-score intensity normalisation within this subject's masked voxels
-
     Step 5 uses only this subject's own voxel distribution -no population
-    statistics are used, so no information leaks from test to train subjects.
-    """
+    statistics are used, so no information leaks from test to train subjects. """
     mni, mask = get_mni()
 
 if ANTS_OK:
