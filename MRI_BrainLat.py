@@ -497,3 +497,17 @@ xgb4 = ImbPipeline([
                 scale_pos_weight=pos_scale,
                 reg_alpha=0.5, reg_lambda=2.0,
                 eval_metric="logloss", verbosity=0, random_state=42))])
+
+lr_p = ImbPipeline([
+            ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
+            ("pca", PCA(n_components=80, random_state=42)),
+            ("clf", LogisticRegression(C=0.05, class_weight="balanced",
+                                       solver="lbfgs", max_iter=3000,
+                                       random_state=42))])
+
+        pipes = [("SVM-C10",  svm10),
+                 ("SVM-C100", svm100),
+                 ("XGB-d4",   xgb4),
+                 ("XGB-d6",   xgb6),
+                 ("LR",       lr_p)]
+
