@@ -511,3 +511,14 @@ lr_p = ImbPipeline([
                  ("XGB-d6",   xgb6),
                  ("LR",       lr_p)]
 
+if LGB_OK:
+            lgb_p = ImbPipeline([
+                ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
+                ("pca", PCA(n_components=80, random_state=42)),
+                ("clf", lgb.LGBMClassifier(
+                    n_estimators=500, max_depth=4, learning_rate=0.03,
+                    subsample=0.8, colsample_bytree=0.8,
+                    scale_pos_weight=pos_scale,
+                    reg_alpha=0.3, reg_lambda=1.5,
+                    verbose=-1, random_state=42))])
+            pipes.append(("LGB", lgb_p))
