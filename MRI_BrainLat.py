@@ -464,3 +464,16 @@ for fold_i, (train_idx, test_idx) in enumerate(skf.split(X, y)):
 
         k_nn      = min(5, n_pd_tr - 1)
         pos_scale = n_hc_tr / n_pd_tr
+
+# ---- build 6 pipelines ----------------------------------------
+        svm10 = ImbPipeline([
+            ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
+            ("pca", PCA(n_components=80, random_state=42)),
+            ("clf", SVC(kernel="rbf", C=10, gamma="scale",
+                        class_weight="balanced", probability=True, random_state=42))])
+
+        svm100 = ImbPipeline([
+            ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
+            ("pca", PCA(n_components=80, random_state=42)),
+            ("clf", SVC(kernel="rbf", C=100, gamma="scale",
+                        class_weight="balanced", probability=True, random_state=42))])
