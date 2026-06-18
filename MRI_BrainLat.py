@@ -399,3 +399,12 @@ def engineer_features(X_train, X_test):
     for i in range(len(PD_ROI_IDX)):
         for j in range(i+1, len(PD_ROI_IDX)):
             pairs_te.append(roi_te[:, i] / (roi_te[:, j] + 1e-8))
+
+ ratio_te = np.column_stack(pairs_te)
+    rm_te = np.mean(X_test, axis=1, keepdims=True)
+    rs_te = np.std(X_test,  axis=1, keepdims=True) + 1e-8
+    zs_te = (X_test - rm_te) / rs_te
+    X_test_eng = np.hstack([X_test, asym_te, log_te, sq_te, ratio_te, zs_te])
+    X_test_eng = (X_test_eng - mean_tr) / (std_tr + 1e-8)
+
+    return X_train_eng, X_test_eng
