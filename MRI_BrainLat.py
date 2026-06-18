@@ -543,3 +543,22 @@ if LGB_OK:
             probs_list.append(p_te)
             weights.append(w)
             print(f"    {pname:10s}  train-cv AUC={w:.4f}")
+
+# AUC-weighted soft vote
+        weights    = np.array(weights)
+        weights    = weights / weights.sum()
+        prob       = sum(w * p for w, p in zip(weights, probs_list))
+        pred       = (prob >= 0.5).astype(int)
+
+        tn, fp, fn, tp = confusion_matrix(y_test, pred).ravel()
+        fold_acc  = accuracy_score(y_test, pred)
+        fold_auc  = roc_auc_score(y_test, prob)
+        fold_sens = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        fold_spec = tn / (tn + fp) if (tn + fp) > 0 else 0.0
+        fold_f1   = f1_score(y_test, pred, zero_division=0)
+        fold_prec = precision_score(y_test, pred, zero_division=0)
+
+        print(f"  --> Fold {fold_i+1}: "
+              f"Acc={fold_acc:.4f}  AUC={fold_auc:.4f}  "
+              f"Sens={fold_sens:.4f}  Spec={fold_spec:.4f}  "
+              f"F1={fold_f1:.4f}")
