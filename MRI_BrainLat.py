@@ -3,11 +3,9 @@ import sys
 os.environ["PYTHONUTF8"] = "1"
 import ssl
 import urllib3
-
 # Disable SSL verification globally - nilearn atlas downloads fail
 ssl._create_default_https_context = ssl._create_unverified_context
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 # Patch requests to skip SSL verify
 import requests
 from requests.adapters import HTTPAdapter
@@ -16,13 +14,11 @@ def _no_ssl_request(self, method, url, **kwargs):
     kwargs.setdefault("verify", False)
     return _orig_request(self, method, url, **kwargs)
 requests.Session.request = _no_ssl_request
-
 import glob
 import warnings
 import numpy as np
 import pandas as pd
 warnings.filterwarnings('ignore')
-
 import nibabel as nib
 from nilearn import image as nl_image
 from nilearn.maskers import NiftiLabelsMasker, NiftiMasker
@@ -37,7 +33,6 @@ from sklearn.metrics import (accuracy_score, roc_auc_score, confusion_matrix, f1
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline as ImbPipeline
 import xgboost as xgb
-
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -53,7 +48,6 @@ CONFIG = {
     "N_FOLDS"  : 5,
     "SEED"     : 42,
 }
-
 for d in [CONFIG["CACHE_DIR"], CONFIG["OUT_DIR"]]:
     os.makedirs(d, exist_ok=True)
 hp_files = (glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii.gz")) + glob.glob(os.path.join(CONFIG["HP_DIR"], "*.nii")))
@@ -421,7 +415,7 @@ for fold_i, (train_idx, test_idx) in enumerate(skf.split(X, y)):
         k_nn      = min(5, n_pd_tr - 1)
         pos_scale = n_hc_tr / n_pd_tr
 
-# ---- build 6 pipelines ----------------------------------------
+        #  build 6 pipelines 
         svm10 = ImbPipeline([
             ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
             ("pca", PCA(n_components=80, random_state=42)),
@@ -466,7 +460,6 @@ lr_p = ImbPipeline([
                  ("XGB-d4",   xgb4),
                  ("XGB-d6",   xgb6),
                  ("LR",       lr_p)]
-
 if LGB_OK:
             lgb_p = ImbPipeline([
                 ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
