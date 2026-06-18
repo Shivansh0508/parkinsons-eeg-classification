@@ -562,3 +562,19 @@ if LGB_OK:
               f"Acc={fold_acc:.4f}  AUC={fold_auc:.4f}  "
               f"Sens={fold_sens:.4f}  Spec={fold_spec:.4f}  "
               f"F1={fold_f1:.4f}")
+
+fold_records.append(dict(
+            fold=fold_i+1,
+            acc=fold_acc, auc=fold_auc,
+            sens=fold_sens, spec=fold_spec,
+            f1=fold_f1, prec=fold_prec,
+            tp=tp, tn=tn, fp=fp, fn=fn))
+
+        all_true.extend(y_test.tolist())
+        all_prob.extend(prob.tolist())
+        all_pred.extend(pred.tolist())
+
+    metrics = ["acc", "auc", "sens", "spec", "f1", "prec"]
+    agg = {m: (np.mean([r[m] for r in fold_records]),
+               np.std([r[m]  for r in fold_records]))
+           for m in metrics}
