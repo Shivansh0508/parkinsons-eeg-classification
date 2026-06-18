@@ -362,3 +362,24 @@ def engineer_features(X_train, X_test):
         zscore   = (X - row_mean) / row_std             
 
         X_eng = np.hstack([X, asym, log_x, sq_x, ratio, zscore])
+
+# Standardise using training mean/std
+        X_eng = (X_eng - mean_tr) / (std_tr + 1e-8)
+        return X_eng
+
+    # Compute all engineered features for train
+    half = min(58, X_train.shape[1] // 2)
+    L_tr = X_train[:, :half]; R_tr = X_train[:, half:2*half]
+    asym_tr  = (L_tr - R_tr) / (np.abs(L_tr) + np.abs(R_tr) + 1e-8)
+    log_tr   = np.sign(X_train) * np.log1p(np.abs(X_train))
+    sq_tr    = X_train ** 2
+    roi_tr   = X_train[:, PD_ROI_IDX]
+    pairs_tr = []
+    for i in range(len(PD_ROI_IDX)):
+        for j in range(i+1, len(PD_ROI_IDX)):
+            pairs_tr.append(roi_tr[:, i] / (roi_tr[:, j] + 1e-8))
+    ratio_tr = np.column_stack(pairs_tr)
+    rm_tr = np.mean(X_train, axis=1, keepdims=True)
+    rs_tr = np.std(X_train,  axis=1, keepdims=True) + 1e-8
+    zs_tr = (X_train - rm_tr) / rs_tr
+    X_train_eng = np.hstack([X_train, asym_tr, log_tr, sq_tr, ratio_tr, zs_tr])
