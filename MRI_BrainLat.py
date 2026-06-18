@@ -383,3 +383,19 @@ def engineer_features(X_train, X_test):
     rs_tr = np.std(X_train,  axis=1, keepdims=True) + 1e-8
     zs_tr = (X_train - rm_tr) / rs_tr
     X_train_eng = np.hstack([X_train, asym_tr, log_tr, sq_tr, ratio_tr, zs_tr])
+
+# Fit scaler on training engineered features
+    mean_tr = X_train_eng.mean(axis=0)
+    std_tr  = X_train_eng.std(axis=0)
+    X_train_eng = (X_train_eng - mean_tr) / (std_tr + 1e-8)
+
+    # Apply same transforms + scaler to test
+    L_te = X_test[:, :half]; R_te = X_test[:, half:2*half]
+    asym_te  = (L_te - R_te) / (np.abs(L_te) + np.abs(R_te) + 1e-8)
+    log_te   = np.sign(X_test) * np.log1p(np.abs(X_test))
+    sq_te    = X_test ** 2
+    roi_te   = X_test[:, PD_ROI_IDX]
+    pairs_te = []
+    for i in range(len(PD_ROI_IDX)):
+        for j in range(i+1, len(PD_ROI_IDX)):
+            pairs_te.append(roi_te[:, i] / (roi_te[:, j] + 1e-8))
