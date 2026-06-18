@@ -341,3 +341,24 @@ def engineer_features(X_train, X_test):
         R = X[:, half:2*half]
         denom = np.abs(L) + np.abs(R) + 1e-8
         asym = (L - R) / denom                       
+
+        # 2. Log magnitude
+        log_x = np.sign(X) * np.log1p(np.abs(X))      
+
+        # 3. Squared
+        sq_x = X ** 2                              
+
+        # 4. Pairwise ratios of PD ROIs
+        roi = X[:, PD_ROI_IDX]                        
+        pairs = []
+        for i in range(len(PD_ROI_IDX)):
+            for j in range(i+1, len(PD_ROI_IDX)):
+                pairs.append(roi[:, i] / (roi[:, j] + 1e-8))
+        ratio = np.column_stack(pairs)                
+
+        # 5. Within-subject z-score across all regions
+        row_mean = np.mean(X, axis=1, keepdims=True)
+        row_std  = np.std(X,  axis=1, keepdims=True) + 1e-8
+        zscore   = (X - row_mean) / row_std             
+
+        X_eng = np.hstack([X, asym, log_x, sq_x, ratio, zscore])
