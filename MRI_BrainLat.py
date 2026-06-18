@@ -526,9 +526,7 @@ tn_g, fp_g, fn_g, tp_g = confusion_matrix(all_true, all_pred).ravel()
         all_prob=all_prob,
         all_pred=all_pred,
         global_cm=np.array([[tn_g, fp_g], [fn_g, tp_g]]))
-
     return result
-
 
 result = stratified_group_kfold_cv(
     X_atlas, y, sites, subjects_df,
