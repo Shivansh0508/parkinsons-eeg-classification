@@ -306,13 +306,13 @@ def engineer_features(X_train, X_test):
         L = X[:, :half]
         R = X[:, half:2*half]
         denom = np.abs(L) + np.abs(R) + 1e-8
-        asym = (L - R) / denom                       
+        asym = (L - R) / denom       
 
         # 2. Log magnitude
-        log_x = np.sign(X) * np.log1p(np.abs(X))      
+        log_x = np.sign(X) * np.log1p(np.abs(X))    
 
         # 3. Squared
-        sq_x = X ** 2                              
+        sq_x = X ** 2                          
 
         # 4. Pairwise ratios of PD ROIs
         roi = X[:, PD_ROI_IDX]                        
@@ -328,7 +328,6 @@ def engineer_features(X_train, X_test):
         zscore   = (X - row_mean) / row_std             
 
         X_eng = np.hstack([X, asym, log_x, sq_x, ratio, zscore])
-
         # Standardise using training mean/std
         X_eng = (X_eng - mean_tr) / (std_tr + 1e-8)
         return X_eng
@@ -350,7 +349,7 @@ def engineer_features(X_train, X_test):
     zs_tr = (X_train - rm_tr) / rs_tr
     X_train_eng = np.hstack([X_train, asym_tr, log_tr, sq_tr, ratio_tr, zs_tr])
 
-# Fit scaler on training engineered features
+    # Fit scaler on training engineered features
     mean_tr = X_train_eng.mean(axis=0)
     std_tr  = X_train_eng.std(axis=0)
     X_train_eng = (X_train_eng - mean_tr) / (std_tr + 1e-8)
@@ -372,7 +371,6 @@ def engineer_features(X_train, X_test):
     zs_te = (X_test - rm_te) / rs_te
     X_test_eng = np.hstack([X_test, asym_te, log_te, sq_te, ratio_te, zs_te])
     X_test_eng = (X_test_eng - mean_tr) / (std_tr + 1e-8)
-
     return X_train_eng, X_test_eng
 
 # STRATIFIED GROUP K-FOLD  —  MAXIMUM POWER ENSEMBLE
@@ -383,10 +381,10 @@ def engineer_features(X_train, X_test):
 #   4. XGBoost  lr=0.01, depth=6  (deeper trees, more interactions)
 #   5. LightGBM (faster gradient boosting, different inductive bias)
 #   6. Logistic Regression (strong linear baseline)
-#
+
 # Final probability = weighted average where weight = each model's val AUC
 # on its own training fold  (AUC-weighted soft vote)
-#
+
 # Requirements satisfied:
 #   - Subject-level splits, no scan leakage
 #   - SMOTE only inside training fold
@@ -401,33 +399,25 @@ def stratified_group_kfold_cv(X, y, sites, subjects_df, n_folds=5):
     except ImportError:
         LGB_OK = False
         print("LightGBM not installed — running without it (still 5 classifiers)")
-
     skf = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42)
-
     fold_records = []
     all_true, all_prob, all_pred = [], [], []
-
     print(f"\nRunning {n_folds}-fold Stratified CV  "
           f"(n={len(y)}, PD={y.sum()}, HC={len(y)-y.sum()})")
     print("-" * 75)
 
 for fold_i, (train_idx, test_idx) in enumerate(skf.split(X, y)):
-
         X_train, X_test = X[train_idx], X[test_idx]
         y_train, y_test = y[train_idx], y[test_idx]
         sites_test      = sites[test_idx]
-
         n_pd_tr = int(y_train.sum())
         n_hc_tr = int(len(y_train) - n_pd_tr)
-
         print(f"Fold {fold_i+1}  |  "
               f"Train: {len(y_train)} (PD={n_pd_tr} HC={n_hc_tr})  |  "
               f"Test: {len(y_test)} (PD={int(y_test.sum())} HC={int(len(y_test)-y_test.sum())})  |  "
               f"Test sites: {sorted(set(sites_test))}")
-
         # Feature engineering — fit on train, apply to both
         X_tr_eng, X_te_eng = engineer_features(X_train, X_test)
-
         k_nn      = min(5, n_pd_tr - 1)
         pos_scale = n_hc_tr / n_pd_tr
 
