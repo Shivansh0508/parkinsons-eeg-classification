@@ -472,14 +472,12 @@ if LGB_OK:
                     verbose=-1, random_state=42))])
             pipes.append(("LGB", lgb_p))
 
-# ---- fit all classifiers on engineered training features ------
+        # fit all classifiers on engineered training features 
         probs_list = []
         weights    = []
-
         for pname, pipe in pipes:
             pipe.fit(X_tr_eng, y_train)
             p_te  = pipe.predict_proba(X_te_eng)[:, 1]
-
             # AUC on training data (internal estimate of model quality)
             # Used as weight — better models get higher vote weight
             p_tr  = pipe.predict_proba(X_tr_eng)[:, 1]
@@ -492,8 +490,7 @@ if LGB_OK:
             probs_list.append(p_te)
             weights.append(w)
             print(f"    {pname:10s}  train-cv AUC={w:.4f}")
-
-# AUC-weighted soft vote
+        # AUC-weighted soft vote
         weights    = np.array(weights)
         weights    = weights / weights.sum()
         prob       = sum(w * p for w, p in zip(weights, probs_list))
@@ -512,24 +509,15 @@ if LGB_OK:
               f"Sens={fold_sens:.4f}  Spec={fold_spec:.4f}  "
               f"F1={fold_f1:.4f}")
 
-fold_records.append(dict(
-            fold=fold_i+1,
-            acc=fold_acc, auc=fold_auc,
-            sens=fold_sens, spec=fold_spec,
-            f1=fold_f1, prec=fold_prec,
-            tp=tp, tn=tn, fp=fp, fn=fn))
-
+fold_records.append(dict(fold=fold_i+1, acc=fold_acc, auc=fold_auc, sens=fold_sens, spec=fold_spec, f1=fold_f1, prec=fold_prec, tp=tp, tn=tn, fp=fp, fn=fn))
         all_true.extend(y_test.tolist())
         all_prob.extend(prob.tolist())
         all_pred.extend(pred.tolist())
-
     metrics = ["acc", "auc", "sens", "spec", "f1", "prec"]
     agg = {m: (np.mean([r[m] for r in fold_records]),
                np.std([r[m]  for r in fold_records]))
            for m in metrics}
-
 tn_g, fp_g, fn_g, tp_g = confusion_matrix(all_true, all_pred).ravel()
-
     result = dict(
         name="Max-Power Ensemble (6 classifiers, AUC-weighted)",
         fold_records=fold_records,
