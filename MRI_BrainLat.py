@@ -444,3 +444,23 @@ def stratified_group_kfold_cv(X, y, sites, subjects_df, n_folds=5):
     print(f"\nRunning {n_folds}-fold Stratified CV  "
           f"(n={len(y)}, PD={y.sum()}, HC={len(y)-y.sum()})")
     print("-" * 75)
+
+for fold_i, (train_idx, test_idx) in enumerate(skf.split(X, y)):
+
+        X_train, X_test = X[train_idx], X[test_idx]
+        y_train, y_test = y[train_idx], y[test_idx]
+        sites_test      = sites[test_idx]
+
+        n_pd_tr = int(y_train.sum())
+        n_hc_tr = int(len(y_train) - n_pd_tr)
+
+        print(f"Fold {fold_i+1}  |  "
+              f"Train: {len(y_train)} (PD={n_pd_tr} HC={n_hc_tr})  |  "
+              f"Test: {len(y_test)} (PD={int(y_test.sum())} HC={int(len(y_test)-y_test.sum())})  |  "
+              f"Test sites: {sorted(set(sites_test))}")
+
+        # Feature engineering — fit on train, apply to both
+        X_tr_eng, X_te_eng = engineer_features(X_train, X_test)
+
+        k_nn      = min(5, n_pd_tr - 1)
+        pos_scale = n_hc_tr / n_pd_tr
