@@ -133,10 +133,8 @@ if ANTS_OK:
         tmp_n4  = os.path.join(CONFIG["CACHE_DIR"], "_tmp_n4.nii.gz")
         tmp_mni = os.path.join(CONFIG["CACHE_DIR"], "_tmp_mni.nii.gz")
         nib.save(mni, tmp_mni)
-
         img_n4 = ants.n4_bias_field_correction(ants.image_read(path), verbose=False)
         ants.image_write(img_n4, tmp_n4)
-
 reg = ants.registration(
             fixed=ants.image_read(tmp_mni),
             moving=ants.image_read(tmp_n4),
@@ -160,11 +158,9 @@ def preprocess_all(df, cache_dir, force=False):
     volumes, failed = {}, []
     total = len(df)
     cached = 0
-
     for i, row in df.iterrows():
         sid   = row["subject_id"]
         fpath = os.path.join(cache_dir, f"{sid}.npy")
-
         if os.path.exists(fpath) and not force:
             volumes[sid] = np.load(fpath)
             cached += 1
@@ -175,19 +171,16 @@ def preprocess_all(df, cache_dir, force=False):
             volumes[sid] = vol
             done = cached + len(volumes) - cached
             print(f"  [{len(volumes)}/{total}] {sid}", end='\r')
-        except Exception as e:
+            except Exception as e:
             print(f"\n  FAIL {sid}: {e}")
             failed.append(sid)
-
     print(f"\nPreprocessed: {len(volumes)}  |  From cache: {cached}  |  Failed: {len(failed)}")
     return volumes, failed
-
 print("\nPreprocessing (runs once, then loads from cache)...")
 volumes, failed = preprocess_all(subjects_df, CONFIG["CACHE_DIR"])
 
 if failed:
     subjects_df = subjects_df[~subjects_df.subject_id.isin(failed)].reset_index(drop=True)
-
 y     = subjects_df["label"].values
 sites = subjects_df["site"].values
 print(f"Final dataset: {len(subjects_df)} subjects  PD={y.sum()}  HC={len(y)-y.sum()}")
@@ -195,13 +188,10 @@ print(f"Final dataset: {len(subjects_df)} subjects  PD={y.sum()}  HC={len(y)-y.s
 # FEATURE EXTRACTION
 # AAL (116 regions) + Harvard-Oxford subcortical (21 regions) = 137 features
 # Each masker is fit on the MNI atlas image -NOT on the subject data.
-
 def find_local_atlas(nilearn_data_dir, patterns):
-    """
-    Search nilearn_data_dir recursively for a .nii or .nii.gz file whose
+    """    Search nilearn_data_dir recursively for a .nii or .nii.gz file whose
     name contains any of the given patterns. Returns first match or None.
-    Only matches image files -never .xml, .txt, .csv etc.
-    """
+    Only matches image files -never .xml, .txt, .csv etc.  """
     for root, dirs, files in os.walk(nilearn_data_dir):
         for fname in files:
             if not (fname.endswith(".nii") or fname.endswith(".nii.gz")):
@@ -221,7 +211,6 @@ def extract_atlas_features(df, volumes):
     telling you exactly where to place the file.  """  
     mni, _ = get_mni()
     nilearn_dir = r"C:\Users\nilearn_data"
-
     # AAL atlas
  confirmed = r"C:\Users\nilearn_data\aal\atlas\AAL.nii"
     if os.path.exists(confirmed):
@@ -235,8 +224,7 @@ def extract_atlas_features(df, volumes):
 print(f"AAL: loaded from {aal_path}")
     aal_img = nib.load(aal_path)
     aal_res = nl_image.resample_to_img(aal_img, mni, interpolation='nearest')
-
-    xml_path = aal_path.replace(".nii", ".xml").replace(".NII", ".xml")
+     xml_path = aal_path.replace(".nii", ".xml").replace(".NII", ".xml")
     if os.path.exists(xml_path):
         import xml.etree.ElementTree as ET
         tree = ET.parse(xml_path)
@@ -247,10 +235,8 @@ if not aal_region_names: aal_region_names = [el.text.strip() for el in tree.iter
     else:
         n_aal_regions    = int(np.unique(aal_res.get_fdata()).max())
         aal_region_names = [f"AAL_{i}" for i in range(1, n_aal_regions + 1)]
-
     m_aal = NiftiLabelsMasker(labels_img=aal_res, standardize=False, strategy='mean', resampling_target=None)
     m_aal.fit()
-
     # Harvard-Oxford subcortical atlas
     ho_path = find_local_atlas(nilearn_dir, [
         "HarvardOxford-sub-maxprob-thr25-2mm",
@@ -265,7 +251,6 @@ if ho_path is None:
             ho     = fetch_atlas_harvard_oxford('sub-maxprob-thr25-2mm')
             ho_res = nl_image.resample_to_img(ho.maps, mni, interpolation='nearest')
         except Exception:
-
             # Last resort: use only AAL features
             print("WARNING: Harvard-Oxford atlas unavailable. Using AAL only (116 features).")
             feats_aal = []
@@ -275,31 +260,25 @@ if ho_path is None:
             X_aal = np.vstack(feats_aal)
             print(f"AAL only: {X_aal.shape}")
             return X_aal, X_aal, aal_region_names
-
 else:
         print(f"HO: loaded from {ho_path}")
         ho_res = nl_image.resample_to_img(nib.load(ho_path), mni, interpolation='nearest')
-
     m_ho = NiftiLabelsMasker(labels_img=ho_res, standardize=False, strategy='mean', resampling_target=None)
     m_ho.fit()
-
     feats_aal, feats_ho = [], []
+
     for _, row in df.iterrows():
         img = nib.Nifti1Image(volumes[row["subject_id"]], mni.affine)
         feats_aal.append(m_aal.transform(img).ravel())
         feats_ho.append(m_ho.transform(img).ravel())
-
     X_aal  = np.vstack(feats_aal)
     X_ho   = np.vstack(feats_ho)
     X_comb = np.hstack([X_aal, X_ho])
-
     print(f"AAL: {X_aal.shape}  |  HO: {X_ho.shape}  |  Combined: {X_comb.shape}")
     return X_comb, X_aal, aal_region_names
 
-
 print("\nExtracting atlas features...")
 X_atlas, X_aal_only, aal_labels = extract_atlas_features(subjects_df, volumes)
-
 n_pd      = int(y.sum())
 n_hc      = int(len(y) - n_pd)
 scale_pos = n_hc / n_pd
@@ -313,7 +292,6 @@ print(f"Class ratio HC/PD = {scale_pos:.2f}  (used as XGBoost scale_pos_weight)"
 # 3. Squared features: x^2      -> captures nonlinear magnitude effects
 # 4. Pairwise ratios of 10 most PD-relevant AAL regions (putamen, caudate etc.)
 # 5. Z-score within subject across regions (relative profile)
-
 PD_ROI_IDX = [67, 68, 71, 72, 73, 74, 77, 78, 83, 19]
 
 def engineer_features(X_train, X_test):
