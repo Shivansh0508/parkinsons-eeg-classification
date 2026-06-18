@@ -522,3 +522,24 @@ if LGB_OK:
                     reg_alpha=0.3, reg_lambda=1.5,
                     verbose=-1, random_state=42))])
             pipes.append(("LGB", lgb_p))
+
+# ---- fit all classifiers on engineered training features ------
+        probs_list = []
+        weights    = []
+
+        for pname, pipe in pipes:
+            pipe.fit(X_tr_eng, y_train)
+            p_te  = pipe.predict_proba(X_te_eng)[:, 1]
+
+            # AUC on training data (internal estimate of model quality)
+            # Used as weight — better models get higher vote weight
+            p_tr  = pipe.predict_proba(X_tr_eng)[:, 1]
+            # Use a small internal CV estimate instead of train AUC to avoid
+            # over-weighting overfit models: use leave-20%-out on train
+            from sklearn.model_selection import cross_val_predict
+            p_cv  = cross_val_predict(pipe, X_tr_eng, y_train,
+                                      cv=3, method="predict_proba")[:, 1]
+            w     = roc_auc_score(y_train, p_cv)
+            probs_list.append(p_te)
+            weights.append(w)
+            print(f"    {pname:10s}  train-cv AUC={w:.4f}")
