@@ -427,3 +427,20 @@ def engineer_features(X_train, X_test):
 #   - StandardScaler + PCA fit on training fold only
 #   - Feature engineering fit on training fold only
 #   - Test fold never touches any fit step
+
+def stratified_group_kfold_cv(X, y, sites, subjects_df, n_folds=5):
+    try:
+        import lightgbm as lgb
+        LGB_OK = True
+    except ImportError:
+        LGB_OK = False
+        print("LightGBM not installed — running without it (still 5 classifiers)")
+
+    skf = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42)
+
+    fold_records = []
+    all_true, all_prob, all_pred = [], [], []
+
+    print(f"\nRunning {n_folds}-fold Stratified CV  "
+          f"(n={len(y)}, PD={y.sum()}, HC={len(y)-y.sum()})")
+    print("-" * 75)
