@@ -477,3 +477,23 @@ for fold_i, (train_idx, test_idx) in enumerate(skf.split(X, y)):
             ("pca", PCA(n_components=80, random_state=42)),
             ("clf", SVC(kernel="rbf", C=100, gamma="scale",
                         class_weight="balanced", probability=True, random_state=42))])
+
+xgb4 = ImbPipeline([
+            ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
+            ("pca", PCA(n_components=80, random_state=42)),
+            ("clf", xgb.XGBClassifier(
+                n_estimators=500, max_depth=4, learning_rate=0.03,
+                subsample=0.8, colsample_bytree=0.8,
+                scale_pos_weight=pos_scale,
+                reg_alpha=0.3, reg_lambda=1.5,
+                eval_metric="logloss", verbosity=0, random_state=42))])
+
+        xgb6 = ImbPipeline([
+            ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
+            ("pca", PCA(n_components=80, random_state=42)),
+            ("clf", xgb.XGBClassifier(
+                n_estimators=500, max_depth=6, learning_rate=0.01,
+                subsample=0.7, colsample_bytree=0.7,
+                scale_pos_weight=pos_scale,
+                reg_alpha=0.5, reg_lambda=2.0,
+                eval_metric="logloss", verbosity=0, random_state=42))])
