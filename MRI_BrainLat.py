@@ -110,7 +110,6 @@ subjects_df = build_table(CONFIG["HP_DIR"], CONFIG["PD_DIR"])
 # Z-score is computed within each subject's own brain mask voxels only 
 # this is NOT a population-level normalisation and introduces no leakage.
 # Cache ensures reproducibility.
-
 try:
     import ants
     ANTS_OK = True
@@ -161,12 +160,9 @@ reg = ants.registration(
         img_reg = nl_image.resample_to_img(
             nib.load(path), mni,
             interpolation='linear', force_resample=True)
-
  img_smooth = smooth_img(img_reg, fwhm=smooth_fwhm)
-
     masker = NiftiMasker(mask_img=mask, standardize=False)
     data   = masker.fit_transform(img_smooth)[0]
-
     # Subject-level z-score (uses only this subject's voxels -no leakage)
     if data.std() > 0:
         data = (data - data.mean()) / data.std()
@@ -185,7 +181,6 @@ def preprocess_all(df, cache_dir, force=False):
             volumes[sid] = np.load(fpath)
             cached += 1
             continue
-
  try:
             vol = preprocess_one(row["path"])
             np.save(fpath, vol)
@@ -229,15 +224,13 @@ def find_local_atlas(nilearn_data_dir, patterns):
     return None
 
 def extract_atlas_features(df, volumes):
-    """
-    Extracts mean signal per brain atlas region for each subject.
+    """ Extracts mean signal per brain atlas region for each subject.
     Maskers are fit on the atlas label image (fixed template) -not on
     subject data -so no leakage regardless of train/test split.
 
     Both atlases are loaded from local disk only -no network calls.
     If a local file is not found the function raises a clear error
-    telling you exactly where to place the file.
-    """
+    telling you exactly where to place the file.  """  
     mni, _ = get_mni()
     nilearn_dir = r"C:\Users\nilearn_data"
 
@@ -267,8 +260,7 @@ if not aal_region_names: aal_region_names = [el.text.strip() for el in tree.iter
         n_aal_regions    = int(np.unique(aal_res.get_fdata()).max())
         aal_region_names = [f"AAL_{i}" for i in range(1, n_aal_regions + 1)]
 
-    m_aal = NiftiLabelsMasker(labels_img=aal_res, standardize=False,
-                              strategy='mean', resampling_target=None)
+    m_aal = NiftiLabelsMasker(labels_img=aal_res, standardize=False, strategy='mean', resampling_target=None)
     m_aal.fit()
 
     # Harvard-Oxford subcortical atlas
@@ -334,3 +326,18 @@ print(f"Class ratio HC/PD = {scale_pos:.2f}  (used as XGBoost scale_pos_weight)"
 # 4. Pairwise ratios of 10 most PD-relevant AAL regions (putamen, caudate etc.)
 # 5. Z-score within subject across regions (relative profile)
 
+PD_ROI_IDX = [67, 68, 71, 72, 73, 74, 77, 78, 83, 19]
+
+def engineer_features(X_train, X_test):
+    """ Applies all feature engineering transforms.
+    Fit parameters come from X_train only — applied to both train and test.
+    Returns augmented (X_train_eng, X_test_eng). """
+    def _transform(X, mean_tr, std_tr):
+        n = X.shape[1]
+
+        # 1. Asymmetry index for first 116 AAL features (58 bilateral pairs)
+        half = min(58, n // 2)
+        L = X[:, :half]
+        R = X[:, half:2*half]
+        denom = np.abs(L) + np.abs(R) + 1e-8
+        asym = (L - R) / denom                       
