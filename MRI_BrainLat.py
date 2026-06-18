@@ -578,3 +578,21 @@ fold_records.append(dict(
     agg = {m: (np.mean([r[m] for r in fold_records]),
                np.std([r[m]  for r in fold_records]))
            for m in metrics}
+
+tn_g, fp_g, fn_g, tp_g = confusion_matrix(all_true, all_pred).ravel()
+
+    result = dict(
+        name="Max-Power Ensemble (6 classifiers, AUC-weighted)",
+        fold_records=fold_records,
+        agg=agg,
+        all_true=all_true,
+        all_prob=all_prob,
+        all_pred=all_pred,
+        global_cm=np.array([[tn_g, fp_g], [fn_g, tp_g]]))
+
+    return result
+
+
+result = stratified_group_kfold_cv(
+    X_atlas, y, sites, subjects_df,
+    n_folds=CONFIG["N_FOLDS"])
