@@ -324,3 +324,13 @@ n_pd      = int(y.sum())
 n_hc      = int(len(y) - n_pd)
 scale_pos = n_hc / n_pd
 print(f"Class ratio HC/PD = {scale_pos:.2f}  (used as XGBoost scale_pos_weight)")
+
+# STRATIFIED GROUP K-FOLD CROSS-VALIDATION
+# FEATURE ENGINEERING  — adds 5 extra feature types on top of raw atlas means
+# All computed from the 137-dim atlas feature vector, no new data needed.
+# 1. Asymmetry index: (L-R)/(L+R) per bilateral pair  -> lateralisation signal
+# 2. Log transform: log(|x|+1)  -> compresses outlier voxels
+# 3. Squared features: x^2      -> captures nonlinear magnitude effects
+# 4. Pairwise ratios of 10 most PD-relevant AAL regions (putamen, caudate etc.)
+# 5. Z-score within subject across regions (relative profile)
+
