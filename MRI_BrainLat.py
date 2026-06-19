@@ -553,3 +553,19 @@ logo = LeaveOneGroupOut()
         X_tr, X_te = X[tr_idx], X[te_idx]
         y_tr, y_te = y[tr_idx], y[te_idx]
         site_name   = sites[te_idx[0]]
+
+if len(np.unique(y_te)) < 2:
+            print(f"  Site {site_name}: skipped (only one class in test set)")
+            continue
+        if (y_tr == 1).sum() < 6:
+            print(f"  Site {site_name}: skipped (too few PD in training set)")
+            continue
+
+        k_nn = min(3, int((y_tr == 1).sum()) - 1)
+
+        pipe = ImbPipeline([
+            ("scaler", StandardScaler()),
+            ("smote",  SMOTE(random_state=42, k_neighbors=k_nn)),
+            ("pca",    PCA(n_components=pca_k, random_state=42)),
+            ("clf",    SVC(kernel="rbf", C=10, class_weight="balanced",
+                           probability=True, random_state=42))])
