@@ -680,3 +680,12 @@ print(f"  {'Site':>6}  {'Acc':>7} {'AUC':>7} {'Sens':>7} {'Spec':>7}")
     print("\n" + "="*90)
     print("SUMMARY vs BENCHMARKS")
     print("="*90)
+
+our_acc  = agg['acc'][0];  our_auc  = agg['auc'][0]
+    our_sens = agg['sens'][0]; our_spec = agg['spec'][0]
+    our_f1   = agg['f1'][0];   our_prec = agg['prec'][0]
+
+    print(f"{'Our model (5-fold stratified CV)':<40} "
+          f"{our_acc*100:>8.2f}% {our_auc:>9.4f} "
+          f"{our_sens*100:>8.2f}% {our_spec*100:>8.2f}% "
+          f"{our_f1:>9.4f} {our_prec:>9.4f}")
