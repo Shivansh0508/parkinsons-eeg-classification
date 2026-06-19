@@ -630,3 +630,14 @@ print("\n" + "="*90)
           f"{'Spec':>9} {'F1':>9} {'Prec':>9}")
     print("-"*90)
 
+ for name, b in bench.items():
+        f1_b  = b.get('f1',  '-')
+        pr_b  = b.get('prec','-')
+        f1_s  = f"{f1_b:.3f}" if isinstance(f1_b, float) else f1_b
+        pr_s  = f"{pr_b:.3f}" if isinstance(pr_b, float) else pr_b
+        print(f"[{name}]{'':23} "
+              f"{b['acc']*100:>8.1f}% {b['auc']:>9.3f} "
+              f"{b['sens']*100:>8.1f}% {b['spec']*100:>8.1f}%"
+              f"{f1_s:>10}{pr_s:>10}")
+
+    print("-"*90)
