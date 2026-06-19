@@ -569,3 +569,17 @@ if len(np.unique(y_te)) < 2:
             ("pca",    PCA(n_components=pca_k, random_state=42)),
             ("clf",    SVC(kernel="rbf", C=10, class_weight="balanced",
                            probability=True, random_state=42))])
+
+ pipe.fit(X_tr, y_tr)
+        prob = pipe.predict_proba(X_te)[:, 1]
+        pred = (prob >= 0.5).astype(int)
+
+        tn, fp, fn, tp = confusion_matrix(y_te, pred).ravel()
+        acc  = accuracy_score(y_te, pred)
+        auc  = roc_auc_score(y_te, prob)
+        sens = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        spec = tn / (tn + fp) if (tn + fp) > 0 else 0.0
+
+        print(f"  Site {site_name:6s} | n_test={len(y_te):3d} "
+              f"(PD={y_te.sum()} HC={len(y_te)-y_te.sum()}) | "
+              f"Acc={acc:.3f}  AUC={auc:.3f}  Sens={sens:.3f}  Spec={spec:.3f}")
