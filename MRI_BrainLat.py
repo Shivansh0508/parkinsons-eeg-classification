@@ -620,3 +620,13 @@ def print_metrics(result, loso_res):
         "Camacho 2024": dict(acc=0.808, auc=0.890, sens=0.791, spec=0.824),
         "Target"      : dict(acc=0.820, auc=0.900, sens=0.800, spec=0.820),
     }
+
+print("\n" + "="*90)
+    print("EVALUATION PROTOCOL : Stratified 5-Fold CV  (transforms fit on train fold only)")
+    print("DATASET             : BrainLat  |  "
+          f"PD={int(y.sum())}  HC={int(len(y)-y.sum())}  Total={len(y)}")
+    print("="*90)
+    print(f"{'Model / Protocol':<40} {'Acc':>9} {'AUC':>9} {'Sens':>9} "
+          f"{'Spec':>9} {'F1':>9} {'Prec':>9}")
+    print("-"*90)
+
