@@ -583,3 +583,22 @@ if len(np.unique(y_te)) < 2:
         print(f"  Site {site_name:6s} | n_test={len(y_te):3d} "
               f"(PD={y_te.sum()} HC={len(y_te)-y_te.sum()}) | "
               f"Acc={acc:.3f}  AUC={auc:.3f}  Sens={sens:.3f}  Spec={spec:.3f}")
+
+fold_records.append(dict(site=site_name, acc=acc, auc=auc,
+                                 sens=sens, spec=spec))
+        all_true.extend(y_te.tolist())
+        all_prob.extend(prob.tolist())
+        all_pred.extend(pred.tolist())
+
+    metrics = ["acc", "auc", "sens", "spec"]
+    agg = {m: (np.mean([r[m] for r in fold_records]),
+               np.std([r[m]  for r in fold_records]))
+           for m in metrics}
+
+    loso_res = dict(
+        name="LOSO Atlas+SVM",
+        fold_records=fold_records,
+        agg=agg,
+        all_true=all_true,
+        all_prob=all_prob,
+        all_pred=all_pred)
