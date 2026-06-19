@@ -535,13 +535,21 @@ result = stratified_group_kfold_cv(
 # LEAVE-ONE-SITE-OUT VALIDATION 
 # Every subject from one site is held out as the test set.
 # This tests generalisation to unseen acquisition sites.
-
 def leave_one_site_out(X, y, sites, pca_k=40):
     """ Leave-One-Site-Out cross-validation.
     Each iteration: train on all sites except one, test on the held-out site.
-
     Requirements:
       - StandardScaler fit on training sites only
       - SMOTE applied to training data only
       - PCA fit on training data only
       - Test site data never used during fit """
+
+logo = LeaveOneGroupOut()
+    fold_records = []
+    all_true, all_prob, all_pred = [], [], []
+    print(f"\nLeave-One-Site-Out  (groups: {sorted(set(sites))})")
+    print("-" * 70)
+    for tr_idx, te_idx in logo.split(X, y, groups=sites):
+        X_tr, X_te = X[tr_idx], X[te_idx]
+        y_tr, y_te = y[tr_idx], y[te_idx]
+        site_name   = sites[te_idx[0]]
