@@ -677,17 +677,13 @@ print_metrics(result, loso_res)
 
 # VISUALISATIONS
 def plot_results(result, loso_res, aal_labels, X_aal_only, y):
-
     agg = result['agg']
     la  = loso_res['agg']
-
     fig = plt.figure(figsize=(20, 14))
     gs  = gridspec.GridSpec(2, 3, figure=fig, hspace=0.42, wspace=0.35)
-    fig.suptitle(
-        "BrainLat PD vs HC  —  Atlas Ensemble (SVM+XGB+LR)\n"
+    fig.suptitle("BrainLat PD vs HC  —  Atlas Ensemble (SVM+XGB+LR)\n"
         "Stratified 5-Fold CV  |  No inter-subject leakage  |  "
-        "All transforms fit on training fold only",
-        fontsize=13, fontweight='bold')
+        "All transforms fit on training fold only", fontsize=13, fontweight='bold')
 
 # 1. ROC curve with per-fold traces + mean
     ax1 = fig.add_subplot(gs[0, :2])
@@ -711,7 +707,6 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
         auc_l = roc_auc_score(loso_res['all_true'], loso_res['all_prob'])
         ax1.plot(fpr_l, tpr_l, color='#6A1B9A', lw=2, ls='--',
                  label=f"LOSO — AUC={auc_l:.4f}")
-
     ax1.set(xlabel="False Positive Rate", ylabel="True Positive Rate",
             title="ROC Curves", xlim=[0, 1], ylim=[0, 1.05])
     ax1.legend(fontsize=9, loc='lower right')
