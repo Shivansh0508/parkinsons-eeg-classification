@@ -729,3 +729,8 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
     ax1.axhline(0.900, color='#43A047', ls=':',  lw=1.5, alpha=0.6,
                 label='Target AUC=0.900')
 
+# Global ROC (all folds concatenated)
+    fpr, tpr, _ = roc_curve(result['all_true'], result['all_prob'])
+    auc_global   = roc_auc_score(result['all_true'], result['all_prob'])
+    ax1.plot(fpr, tpr, color='#1565C0', lw=3,
+             label=f"Our model — global AUC={auc_global:.4f}")
