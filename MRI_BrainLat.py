@@ -652,3 +652,15 @@ print("\n" + "="*90)
               f"{r['sens']*100:>6.2f}% {r['spec']*100:>6.2f}% "
               f"{r['f1']:>7.4f} {r['prec']:>7.4f}  "
               f"{r['tp']:>4} {r['tn']:>4} {r['fp']:>4} {r['fn']:>4}")
+
+print(f"\n  {'Mean':>4}  "
+          f"{agg['acc'][0]*100:>6.2f}% {agg['auc'][0]:>7.4f} "
+          f"{agg['sens'][0]*100:>6.2f}% {agg['spec'][0]*100:>6.2f}% "
+          f"{agg['f1'][0]:>7.4f} {agg['prec'][0]:>7.4f}")
+    print(f"  {'Std':>4}  "
+          f"{agg['acc'][1]*100:>6.2f}% {agg['auc'][1]:>7.4f} "
+          f"{agg['sens'][1]*100:>6.2f}% {agg['spec'][1]*100:>6.2f}% "
+          f"{agg['f1'][1]:>7.4f} {agg['prec'][1]:>7.4f}")
+
+    print("\n" + "-"*90)
+    print("Leave-One-Site-Out per site:")
