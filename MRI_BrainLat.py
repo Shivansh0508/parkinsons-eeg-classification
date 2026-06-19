@@ -531,3 +531,17 @@ tn_g, fp_g, fn_g, tp_g = confusion_matrix(all_true, all_pred).ravel()
 result = stratified_group_kfold_cv(
     X_atlas, y, sites, subjects_df,
     n_folds=CONFIG["N_FOLDS"])
+
+# LEAVE-ONE-SITE-OUT VALIDATION 
+# Every subject from one site is held out as the test set.
+# This tests generalisation to unseen acquisition sites.
+
+def leave_one_site_out(X, y, sites, pca_k=40):
+    """ Leave-One-Site-Out cross-validation.
+    Each iteration: train on all sites except one, test on the held-out site.
+
+    Requirements:
+      - StandardScaler fit on training sites only
+      - SMOTE applied to training data only
+      - PCA fit on training data only
+      - Test site data never used during fit """
