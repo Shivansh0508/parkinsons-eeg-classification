@@ -602,3 +602,11 @@ fold_records.append(dict(site=site_name, acc=acc, auc=auc,
         all_true=all_true,
         all_prob=all_prob,
         all_pred=all_pred)
+
+return loso_res
+
+
+loso_res = leave_one_site_out(X_atlas, y, sites, pca_k=40)
+
+
+# PRINT FULL METRICS TABLE
