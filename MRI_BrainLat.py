@@ -610,3 +610,13 @@ loso_res = leave_one_site_out(X_atlas, y, sites, pca_k=40)
 
 
 # PRINT FULL METRICS TABLE
+def print_metrics(result, loso_res):
+
+    agg = result['agg']
+    la  = loso_res['agg']
+
+    bench = {
+        "Camacho 2023": dict(acc=0.793, auc=0.870, sens=0.777, spec=0.813),
+        "Camacho 2024": dict(acc=0.808, auc=0.890, sens=0.791, spec=0.824),
+        "Target"      : dict(acc=0.820, auc=0.900, sens=0.800, spec=0.820),
+    }
