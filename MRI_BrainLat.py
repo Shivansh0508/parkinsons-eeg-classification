@@ -664,3 +664,19 @@ print(f"\n  {'Mean':>4}  "
 
     print("\n" + "-"*90)
     print("Leave-One-Site-Out per site:")
+
+print(f"  {'Site':>6}  {'Acc':>7} {'AUC':>7} {'Sens':>7} {'Spec':>7}")
+    for r in loso_res['fold_records']:
+        print(f"  {r['site']:>6}  "
+              f"{r['acc']*100:>6.2f}% {r['auc']:>7.4f} "
+              f"{r['sens']*100:>6.2f}% {r['spec']*100:>6.2f}%")
+    print(f"\n  {'Mean':>6}  "
+          f"{la['acc'][0]*100:>6.2f}% {la['auc'][0]:>7.4f} "
+          f"{la['sens'][0]*100:>6.2f}% {la['spec'][0]*100:>6.2f}%")
+    print(f"  {'Std':>6}  "
+          f"{la['acc'][1]*100:>6.2f}% {la['auc'][1]:>7.4f} "
+          f"{la['sens'][1]*100:>6.2f}% {la['spec'][1]*100:>6.2f}%")
+
+    print("\n" + "="*90)
+    print("SUMMARY vs BENCHMARKS")
+    print("="*90)
