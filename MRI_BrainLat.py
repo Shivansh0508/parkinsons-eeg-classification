@@ -641,3 +641,14 @@ print("\n" + "="*90)
               f"{f1_s:>10}{pr_s:>10}")
 
     print("-"*90)
+
+# Per-fold detail
+    print(f"\nPer-fold results ({CONFIG['N_FOLDS']}-fold Stratified CV):")
+    print(f"  {'Fold':>4}  {'Acc':>7} {'AUC':>7} {'Sens':>7} "
+          f"{'Spec':>7} {'F1':>7} {'Prec':>7}  {'TP':>4} {'TN':>4} {'FP':>4} {'FN':>4}")
+    for r in result['fold_records']:
+        print(f"  {r['fold']:>4}  "
+              f"{r['acc']*100:>6.2f}% {r['auc']:>7.4f} "
+              f"{r['sens']*100:>6.2f}% {r['spec']*100:>6.2f}% "
+              f"{r['f1']:>7.4f} {r['prec']:>7.4f}  "
+              f"{r['tp']:>4} {r['tn']:>4} {r['fp']:>4} {r['fn']:>4}")
