@@ -598,16 +598,8 @@ loso_res = leave_one_site_out(X_atlas, y, sites, pca_k=40)
 
 # PRINT FULL METRICS TABLE
 def print_metrics(result, loso_res):
-
     agg = result['agg']
     la  = loso_res['agg']
-
-    bench = {
-        "Camacho 2023": dict(acc=0.793, auc=0.870, sens=0.777, spec=0.813),
-        "Camacho 2024": dict(acc=0.808, auc=0.890, sens=0.791, spec=0.824),
-        "Target"      : dict(acc=0.820, auc=0.900, sens=0.800, spec=0.820),
-    }
-
 print("\n" + "="*90)
     print("EVALUATION PROTOCOL : Stratified 5-Fold CV  (transforms fit on train fold only)")
     print("DATASET             : BrainLat  |  "
@@ -626,9 +618,7 @@ print("\n" + "="*90)
               f"{b['acc']*100:>8.1f}% {b['auc']:>9.3f} "
               f"{b['sens']*100:>8.1f}% {b['spec']*100:>8.1f}%"
               f"{f1_s:>10}{pr_s:>10}")
-
     print("-"*90)
-
     # Per-fold detail
     print(f"\nPer-fold results ({CONFIG['N_FOLDS']}-fold Stratified CV):")
     print(f"  {'Fold':>4}  {'Acc':>7} {'AUC':>7} {'Sens':>7} "
@@ -651,7 +641,6 @@ print(f"\n  {'Mean':>4}  "
 
     print("\n" + "-"*90)
     print("Leave-One-Site-Out per site:")
-
 print(f"  {'Site':>6}  {'Acc':>7} {'AUC':>7} {'Sens':>7} {'Spec':>7}")
     for r in loso_res['fold_records']:
         print(f"  {r['site']:>6}  "
@@ -663,7 +652,6 @@ print(f"  {'Site':>6}  {'Acc':>7} {'AUC':>7} {'Sens':>7} {'Spec':>7}")
     print(f"  {'Std':>6}  "
           f"{la['acc'][1]*100:>6.2f}% {la['auc'][1]:>7.4f} "
           f"{la['sens'][1]*100:>6.2f}% {la['spec'][1]*100:>6.2f}%")
-
     print("\n" + "="*90)
     print("SUMMARY vs BENCHMARKS")
     print("="*90)
@@ -671,12 +659,10 @@ print(f"  {'Site':>6}  {'Acc':>7} {'AUC':>7} {'Sens':>7} {'Spec':>7}")
 our_acc  = agg['acc'][0];  our_auc  = agg['auc'][0]
     our_sens = agg['sens'][0]; our_spec = agg['spec'][0]
     our_f1   = agg['f1'][0];   our_prec = agg['prec'][0]
-
     print(f"{'Our model (5-fold stratified CV)':<40} "
           f"{our_acc*100:>8.2f}% {our_auc:>9.4f} "
           f"{our_sens*100:>8.2f}% {our_spec*100:>8.2f}% "
           f"{our_f1:>9.4f} {our_prec:>9.4f}")
-
 for name, b in bench.items():
         da = (our_acc  - b['acc'])  * 100
         du = our_auc   - b['auc']
@@ -687,12 +673,9 @@ for name, b in bench.items():
               f"Delta Sens={ds:+.2f}%  Delta Spec={dp:+.2f}%  "
               f"{'BEATS' if our_auc > b['auc'] else 'below'}")
     print("="*90)
-
-
 print_metrics(result, loso_res)
 
 # VISUALISATIONS
-
 def plot_results(result, loso_res, aal_labels, X_aal_only, y):
 
     agg = result['agg']
