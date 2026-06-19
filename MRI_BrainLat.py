@@ -734,3 +734,15 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
     auc_global   = roc_auc_score(result['all_true'], result['all_prob'])
     ax1.plot(fpr, tpr, color='#1565C0', lw=3,
              label=f"Our model — global AUC={auc_global:.4f}")
+
+ # LOSO ROC
+    if len(loso_res['all_true']) >= 2:
+        fpr_l, tpr_l, _ = roc_curve(loso_res['all_true'], loso_res['all_prob'])
+        auc_l = roc_auc_score(loso_res['all_true'], loso_res['all_prob'])
+        ax1.plot(fpr_l, tpr_l, color='#6A1B9A', lw=2, ls='--',
+                 label=f"LOSO — AUC={auc_l:.4f}")
+
+    ax1.set(xlabel="False Positive Rate", ylabel="True Positive Rate",
+            title="ROC Curves", xlim=[0, 1], ylim=[0, 1.05])
+    ax1.legend(fontsize=9, loc='lower right')
+    ax1.grid(alpha=0.2)
