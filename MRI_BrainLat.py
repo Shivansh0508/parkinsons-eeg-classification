@@ -719,4 +719,13 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
         "All transforms fit on training fold only",
         fontsize=13, fontweight='bold')
 
+# 1. ROC curve with per-fold traces + mean
+    ax1 = fig.add_subplot(gs[0, :2])
+    ax1.plot([0, 1], [0, 1], 'k--', alpha=0.2, label='Random')
+    ax1.axhline(0.870, color='#E53935', ls='--', lw=2, alpha=0.6,
+                label='Camacho 2023  AUC=0.870')
+    ax1.axhline(0.890, color='#FB8C00', ls='--', lw=2, alpha=0.6,
+                label='Camacho 2024  AUC=0.890')
+    ax1.axhline(0.900, color='#43A047', ls=':',  lw=1.5, alpha=0.6,
+                label='Target AUC=0.900')
 
