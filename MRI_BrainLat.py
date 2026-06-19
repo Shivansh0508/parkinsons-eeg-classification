@@ -704,3 +704,19 @@ for name, b in bench.items():
 
 print_metrics(result, loso_res)
 
+# VISUALISATIONS
+
+def plot_results(result, loso_res, aal_labels, X_aal_only, y):
+
+    agg = result['agg']
+    la  = loso_res['agg']
+
+    fig = plt.figure(figsize=(20, 14))
+    gs  = gridspec.GridSpec(2, 3, figure=fig, hspace=0.42, wspace=0.35)
+    fig.suptitle(
+        "BrainLat PD vs HC  —  Atlas Ensemble (SVM+XGB+LR)\n"
+        "Stratified 5-Fold CV  |  No inter-subject leakage  |  "
+        "All transforms fit on training fold only",
+        fontsize=13, fontweight='bold')
+
+
