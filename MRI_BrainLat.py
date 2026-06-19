@@ -560,17 +560,14 @@ if len(np.unique(y_te)) < 2:
         if (y_tr == 1).sum() < 6:
             print(f"  Site {site_name}: skipped (too few PD in training set)")
             continue
-
         k_nn = min(3, int((y_tr == 1).sum()) - 1)
-
         pipe = ImbPipeline([
             ("scaler", StandardScaler()),
             ("smote",  SMOTE(random_state=42, k_neighbors=k_nn)),
             ("pca",    PCA(n_components=pca_k, random_state=42)),
             ("clf",    SVC(kernel="rbf", C=10, class_weight="balanced",
                            probability=True, random_state=42))])
-
- pipe.fit(X_tr, y_tr)
+    pipe.fit(X_tr, y_tr)
         prob = pipe.predict_proba(X_te)[:, 1]
         pred = (prob >= 0.5).astype(int)
 
@@ -579,22 +576,15 @@ if len(np.unique(y_te)) < 2:
         auc  = roc_auc_score(y_te, prob)
         sens = tp / (tp + fn) if (tp + fn) > 0 else 0.0
         spec = tn / (tn + fp) if (tn + fp) > 0 else 0.0
-
-        print(f"  Site {site_name:6s} | n_test={len(y_te):3d} "
-              f"(PD={y_te.sum()} HC={len(y_te)-y_te.sum()}) | "
-              f"Acc={acc:.3f}  AUC={auc:.3f}  Sens={sens:.3f}  Spec={spec:.3f}")
-
-fold_records.append(dict(site=site_name, acc=acc, auc=auc,
-                                 sens=sens, spec=spec))
+        print(f"  Site {site_name:6s} | n_test={len(y_te):3d} " f"(PD={y_te.sum()} HC={len(y_te)-y_te.sum()}) | " f"Acc={acc:.3f}  AUC={auc:.3f}  Sens={sens:.3f}  Spec={spec:.3f}")
+fold_records.append(dict(site=site_name, acc=acc, auc=auc, sens=sens, spec=spec))
         all_true.extend(y_te.tolist())
         all_prob.extend(prob.tolist())
         all_pred.extend(pred.tolist())
-
     metrics = ["acc", "auc", "sens", "spec"]
     agg = {m: (np.mean([r[m] for r in fold_records]),
                np.std([r[m]  for r in fold_records]))
            for m in metrics}
-
     loso_res = dict(
         name="LOSO Atlas+SVM",
         fold_records=fold_records,
@@ -602,10 +592,7 @@ fold_records.append(dict(site=site_name, acc=acc, auc=auc,
         all_true=all_true,
         all_prob=all_prob,
         all_pred=all_pred)
-
 return loso_res
-
-
 loso_res = leave_one_site_out(X_atlas, y, sites, pca_k=40)
 
 
@@ -642,7 +629,7 @@ print("\n" + "="*90)
 
     print("-"*90)
 
-# Per-fold detail
+    # Per-fold detail
     print(f"\nPer-fold results ({CONFIG['N_FOLDS']}-fold Stratified CV):")
     print(f"  {'Fold':>4}  {'Acc':>7} {'AUC':>7} {'Sens':>7} "
           f"{'Spec':>7} {'F1':>7} {'Prec':>7}  {'TP':>4} {'TN':>4} {'FP':>4} {'FN':>4}")
