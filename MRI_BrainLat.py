@@ -689,3 +689,18 @@ our_acc  = agg['acc'][0];  our_auc  = agg['auc'][0]
           f"{our_acc*100:>8.2f}% {our_auc:>9.4f} "
           f"{our_sens*100:>8.2f}% {our_spec*100:>8.2f}% "
           f"{our_f1:>9.4f} {our_prec:>9.4f}")
+
+for name, b in bench.items():
+        da = (our_acc  - b['acc'])  * 100
+        du = our_auc   - b['auc']
+        ds = (our_sens - b['sens']) * 100
+        dp = (our_spec - b['spec']) * 100
+        print(f"  vs {name:<36} "
+              f"Delta Acc={da:+.2f}%  Delta AUC={du:+.4f}  "
+              f"Delta Sens={ds:+.2f}%  Delta Spec={dp:+.2f}%  "
+              f"{'BEATS' if our_auc > b['auc'] else 'below'}")
+    print("="*90)
+
+
+print_metrics(result, loso_res)
+
