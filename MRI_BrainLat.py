@@ -788,3 +788,19 @@ ax5.barh(range(15), imp[top][::-1],
     plt.close()
 
 plot_results(result, loso_res, aal_labels, X_aal_only, y)
+
+# SAVE METRICS TO CSV
+def save_metrics_csv(result, loso_res):
+    # Per-fold CV table
+    cv_rows = []
+    for r in result['fold_records']:
+        cv_rows.append(dict(
+            protocol="5-fold Stratified CV",
+            fold=r['fold'],
+            accuracy=round(r['acc'], 4),
+            AUC_ROC=round(r['auc'], 4),
+            sensitivity=round(r['sens'], 4),
+            specificity=round(r['spec'], 4),
+            F1=round(r['f1'], 4),
+            precision=round(r['prec'], 4),
+            TP=r['tp'], TN=r['tn'], FP=r['fp'], FN=r['fn']))
