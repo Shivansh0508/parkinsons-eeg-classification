@@ -816,3 +816,14 @@ agg = result['agg']
         F1=round(agg['f1'][0], 4),
         precision=round(agg['prec'][0], 4),
         TP="", TN="", FP="", FN=""))
+
+cv_rows.append(dict(
+        protocol="5-fold Stratified CV",
+        fold="STD",
+        accuracy=round(agg['acc'][1], 4),
+        AUC_ROC=round(agg['auc'][1], 4),
+        sensitivity=round(agg['sens'][1], 4),
+        specificity=round(agg['spec'][1], 4),
+        F1=round(agg['f1'][1], 4),
+        precision=round(agg['prec'][1], 4),
+        TP="", TN="", FP="", FN=""))
