@@ -743,3 +743,11 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
         f"Global CM (all folds)\n"
         f"Sens={tp_v/(tp_v+fn_v):.3f}  Spec={tn_v/(tn_v+fp_v):.3f}",
         fontsize=10)
+
+     # 4. Metrics comparison bar (our model vs benchmarks)
+    ax4 = fig.add_subplot(gs[1, 1])
+    metric_names  = ["Accuracy", "AUC-ROC", "Sensitivity", "Specificity"]
+    bench1_vals   = [0.793, 0.870, 0.777, 0.813]
+    bench2_vals   = [0.808, 0.890, 0.791, 0.824]
+    our_vals      = [agg['acc'][0], agg['auc'][0], agg['sens'][0], agg['spec'][0]]
+    target_vals   = [0.820, 0.900, 0.800, 0.820]
