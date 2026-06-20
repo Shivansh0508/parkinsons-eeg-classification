@@ -804,3 +804,15 @@ def save_metrics_csv(result, loso_res):
             F1=round(r['f1'], 4),
             precision=round(r['prec'], 4),
             TP=r['tp'], TN=r['tn'], FP=r['fp'], FN=r['fn']))
+
+agg = result['agg']
+    cv_rows.append(dict(
+        protocol="5-fold Stratified CV",
+        fold="MEAN",
+        accuracy=round(agg['acc'][0], 4),
+        AUC_ROC=round(agg['auc'][0], 4),
+        sensitivity=round(agg['sens'][0], 4),
+        specificity=round(agg['spec'][0], 4),
+        F1=round(agg['f1'][0], 4),
+        precision=round(agg['prec'][0], 4),
+        TP="", TN="", FP="", FN=""))
