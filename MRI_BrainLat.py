@@ -827,3 +827,16 @@ cv_rows.append(dict(
         F1=round(agg['f1'][1], 4),
         precision=round(agg['prec'][1], 4),
         TP="", TN="", FP="", FN=""))
+
+     # LOSO table
+    loso_rows = []
+    for r in loso_res['fold_records']:
+        loso_rows.append(dict(
+            protocol="LOSO",
+            fold=r['site'],
+            accuracy=round(r['acc'], 4),
+            AUC_ROC=round(r['auc'], 4),
+            sensitivity=round(r['sens'], 4),
+            specificity=round(r['spec'], 4),
+            F1="", precision="",
+            TP="", TN="", FP="", FN=""))
