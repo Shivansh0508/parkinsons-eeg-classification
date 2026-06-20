@@ -751,3 +751,13 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
     bench2_vals   = [0.808, 0.890, 0.791, 0.824]
     our_vals      = [agg['acc'][0], agg['auc'][0], agg['sens'][0], agg['spec'][0]]
     target_vals   = [0.820, 0.900, 0.800, 0.820]
+
+ x4 = np.arange(len(metric_names)); w4 = 0.20
+    ax4.bar(x4 - 1.5*w4, bench1_vals, w4, label='Camacho 2023', color='#EF9A9A', alpha=0.9)
+    ax4.bar(x4 - 0.5*w4, bench2_vals, w4, label='Camacho 2024', color='#FFCC80', alpha=0.9)
+    ax4.bar(x4 + 0.5*w4, our_vals,    w4, label='Ours',         color='#42A5F5', alpha=0.9)
+    ax4.bar(x4 + 1.5*w4, target_vals, w4, label='Target',       color='#A5D6A7', alpha=0.9)
+    ax4.set(xticks=x4, xticklabels=metric_names, ylim=[0.5, 1.05],
+            title="Metric Comparison")
+    ax4.tick_params(axis='x', labelsize=8)
+    ax4.legend(fontsize=7); ax4.grid(axis='y', alpha=0.3)
