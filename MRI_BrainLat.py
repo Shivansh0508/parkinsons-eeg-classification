@@ -421,13 +421,11 @@ for fold_i, (train_idx, test_idx) in enumerate(skf.split(X, y)):
             ("pca", PCA(n_components=80, random_state=42)),
             ("clf", SVC(kernel="rbf", C=10, gamma="scale",
                         class_weight="balanced", probability=True, random_state=42))])
-
         svm100 = ImbPipeline([
             ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
             ("pca", PCA(n_components=80, random_state=42)),
             ("clf", SVC(kernel="rbf", C=100, gamma="scale",
                         class_weight="balanced", probability=True, random_state=42))])
-
 xgb4 = ImbPipeline([
             ("sm",  SMOTE(random_state=42, k_neighbors=k_nn)),
             ("pca", PCA(n_components=80, random_state=42)),
@@ -739,10 +737,7 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
                 ax=ax3, cbar=False, linewidths=0.5, annot_kws={"size": 14})
     tn_v, fp_v = cm[0, 0], cm[0, 1]
     fn_v, tp_v = cm[1, 0], cm[1, 1]
-    ax3.set_title(
-        f"Global CM (all folds)\n"
-        f"Sens={tp_v/(tp_v+fn_v):.3f}  Spec={tn_v/(tn_v+fp_v):.3f}",
-        fontsize=10)
+    ax3.set_title( f"Global CM (all folds)\n" f"Sens={tp_v/(tp_v+fn_v):.3f}  Spec={tn_v/(tn_v+fp_v):.3f}",fontsize=10)
 
      # 4. Metrics comparison bar (our model vs benchmarks)
     ax4 = fig.add_subplot(gs[1, 1])
@@ -757,16 +752,13 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
     ax4.bar(x4 - 0.5*w4, bench2_vals, w4, label='Camacho 2024', color='#FFCC80', alpha=0.9)
     ax4.bar(x4 + 0.5*w4, our_vals,    w4, label='Ours',         color='#42A5F5', alpha=0.9)
     ax4.bar(x4 + 1.5*w4, target_vals, w4, label='Target',       color='#A5D6A7', alpha=0.9)
-    ax4.set(xticks=x4, xticklabels=metric_names, ylim=[0.5, 1.05],
-            title="Metric Comparison")
+    ax4.set(xticks=x4, xticklabels=metric_names, ylim=[0.5, 1.05], title="Metric Comparison")
     ax4.tick_params(axis='x', labelsize=8)
     ax4.legend(fontsize=7); ax4.grid(axis='y', alpha=0.3)
 
 # 5. XGBoost feature importance — top 15 AAL regions
     ax5 = fig.add_subplot(gs[1, 2])
-    xg  = xgb.XGBClassifier(n_estimators=300, max_depth=4,
-                              scale_pos_weight=scale_pos,
-                              verbosity=0, random_state=42)
+    xg  = xgb.XGBClassifier(n_estimators=300, max_depth=4, scale_pos_weight=scale_pos,verbosity=0, random_state=42)
     sc  = StandardScaler()
     xg.fit(sc.fit_transform(X_aal_only), y)
     imp = xg.feature_importances_
@@ -774,19 +766,16 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
     lbs = [str(aal_labels[i])[:22] if i < len(aal_labels)
            else f"Region_{i}" for i in top]
 
-ax5.barh(range(15), imp[top][::-1],
-             color=plt.cm.RdYlGn(np.linspace(0.3, 0.9, 15)))
+ax5.barh(range(15), imp[top][::-1], color=plt.cm.RdYlGn(np.linspace(0.3, 0.9, 15)))
     ax5.set_yticks(range(15))
     ax5.set_yticklabels(lbs[::-1], fontsize=7)
     ax5.set(xlabel="Feature Importance",
             title="Top 15 Brain Regions (XGBoost)")
     ax5.grid(axis='x', alpha=0.3)
-
     out_path = os.path.join(CONFIG["OUT_DIR"], "brainlat_results.png")
     plt.savefig(out_path, dpi=180, bbox_inches='tight', facecolor='white')
     print(f"\nFigure saved: {out_path}")
     plt.close()
-
 plot_results(result, loso_res, aal_labels, X_aal_only, y)
 
 # SAVE METRICS TO CSV
@@ -854,3 +843,5 @@ df_out = pd.DataFrame(cv_rows + loso_rows)
     csv_path = os.path.join(CONFIG["OUT_DIR"], "brainlat_metrics.csv")
     df_out.to_csv(csv_path, index=False)
     print(f"Metrics CSV saved: {csv_path}")
+
+save_metrics_csv(result, loso_res)
