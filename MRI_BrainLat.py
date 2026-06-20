@@ -840,3 +840,12 @@ cv_rows.append(dict(
             specificity=round(r['spec'], 4),
             F1="", precision="",
             TP="", TN="", FP="", FN=""))
+
+la = loso_res['agg']
+    loso_rows.append(dict(
+        protocol="LOSO", fold="MEAN",
+        accuracy=round(la['acc'][0], 4),
+        AUC_ROC=round(la['auc'][0], 4),
+        sensitivity=round(la['sens'][0], 4),
+        specificity=round(la['spec'][0], 4),
+        F1="", precision="", TP="", TN="", FP="", FN=""))
