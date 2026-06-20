@@ -773,3 +773,16 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
     top = np.argsort(imp)[::-1][:15]
     lbs = [str(aal_labels[i])[:22] if i < len(aal_labels)
            else f"Region_{i}" for i in top]
+
+ax5.barh(range(15), imp[top][::-1],
+             color=plt.cm.RdYlGn(np.linspace(0.3, 0.9, 15)))
+    ax5.set_yticks(range(15))
+    ax5.set_yticklabels(lbs[::-1], fontsize=7)
+    ax5.set(xlabel="Feature Importance",
+            title="Top 15 Brain Regions (XGBoost)")
+    ax5.grid(axis='x', alpha=0.3)
+
+    out_path = os.path.join(CONFIG["OUT_DIR"], "brainlat_results.png")
+    plt.savefig(out_path, dpi=180, bbox_inches='tight', facecolor='white')
+    print(f"\nFigure saved: {out_path}")
+    plt.close()
