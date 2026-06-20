@@ -849,3 +849,8 @@ la = loso_res['agg']
         sensitivity=round(la['sens'][0], 4),
         specificity=round(la['spec'][0], 4),
         F1="", precision="", TP="", TN="", FP="", FN=""))
+
+df_out = pd.DataFrame(cv_rows + loso_rows)
+    csv_path = os.path.join(CONFIG["OUT_DIR"], "brainlat_metrics.csv")
+    df_out.to_csv(csv_path, index=False)
+    print(f"Metrics CSV saved: {csv_path}")
