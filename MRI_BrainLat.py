@@ -761,3 +761,15 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
             title="Metric Comparison")
     ax4.tick_params(axis='x', labelsize=8)
     ax4.legend(fontsize=7); ax4.grid(axis='y', alpha=0.3)
+
+# 5. XGBoost feature importance — top 15 AAL regions
+    ax5 = fig.add_subplot(gs[1, 2])
+    xg  = xgb.XGBClassifier(n_estimators=300, max_depth=4,
+                              scale_pos_weight=scale_pos,
+                              verbosity=0, random_state=42)
+    sc  = StandardScaler()
+    xg.fit(sc.fit_transform(X_aal_only), y)
+    imp = xg.feature_importances_
+    top = np.argsort(imp)[::-1][:15]
+    lbs = [str(aal_labels[i])[:22] if i < len(aal_labels)
+           else f"Region_{i}" for i in top]
