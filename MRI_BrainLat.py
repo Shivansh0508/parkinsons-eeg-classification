@@ -786,3 +786,5 @@ ax5.barh(range(15), imp[top][::-1],
     plt.savefig(out_path, dpi=180, bbox_inches='tight', facecolor='white')
     print(f"\nFigure saved: {out_path}")
     plt.close()
+
+plot_results(result, loso_res, aal_labels, X_aal_only, y)
