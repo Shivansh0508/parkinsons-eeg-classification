@@ -711,3 +711,21 @@ def plot_results(result, loso_res, aal_labels, X_aal_only, y):
             title="ROC Curves", xlim=[0, 1], ylim=[0, 1.05])
     ax1.legend(fontsize=9, loc='lower right')
     ax1.grid(alpha=0.2)
+
+    # 2. Per-fold AUC bar chart
+    ax2 = fig.add_subplot(gs[0, 2])
+    folds     = [r['fold'] for r in result['fold_records']]
+    fold_aucs = [r['auc']  for r in result['fold_records']]
+    fold_accs = [r['acc']  for r in result['fold_records']]
+    x = np.arange(len(folds)); w = 0.35
+    ax2.bar(x - w/2, fold_accs, w, label='Acc', color='#42A5F5', alpha=0.85)
+    ax2.bar(x + w/2, fold_aucs, w, label='AUC', color='#66BB6A', alpha=0.85)
+    ax2.axhline(agg['acc'][0], color='#1565C0', ls='--', lw=1.5, alpha=0.7,
+                label=f"Mean Acc={agg['acc'][0]:.3f}")
+    ax2.axhline(agg['auc'][0], color='#2E7D32', ls='--', lw=1.5, alpha=0.7,
+                label=f"Mean AUC={agg['auc'][0]:.3f}")
+    ax2.axhline(0.900, color='#E53935', ls=':', lw=1.5, alpha=0.5,
+                label='Target 0.90')
+    ax2.set(xticks=x, xticklabels=[f"F{f}" for f in folds],
+            ylim=[0.5, 1.05], title="Per-Fold Acc & AUC")
+    ax2.legend(fontsize=7); ax2.grid(axis='y', alpha=0.3)
