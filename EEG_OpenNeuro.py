@@ -78,3 +78,7 @@ for rec in all_records:
     bids_sub = str(rec.get("subject","")).zfill(3)
     grp      = str(pinfo.get("group","")).upper()
     rows.append(dict(subject_id=sid, bids_sub=bids_sub,label=0 if grp=="HC" else 1, record=rec))
+
+subjects_df = pd.DataFrame(rows).reset_index(drop=True)
+y           = subjects_df["label"].values
+print(f"Subjects: {len(subjects_df)}  PD={y.sum()}  HC={len(y)-y.sum()}")
