@@ -1,4 +1,4 @@
-# EEG PD vs HC  —  DS007526  —  Maximum Accuracy Version
+# EEG PD vs HC  —  DS007526 
 import os, sys, ssl, glob, warnings
 import numpy as np
 import pandas as pd
@@ -56,3 +56,9 @@ CONFIG = {
     "SEED"      : 42,
 }
 os.makedirs(CONFIG["OUT_DIR"], exist_ok=True)
+FIXED_CH = ['F3','Fz','F4','T7','C3','C4','P7','P3','Pz','P4','P8','O1','Oz','O2']
+N_CH     = len(FIXED_CH)  
+SFREQ    = CONFIG["SFREQ"]
+N_TIMES  = int(CONFIG["EPOCH_LEN"] * SFREQ)  
+
+BANDS = {'delta':(0.5,4),'theta':(4,8),'alpha':(8,13),'beta':(13,30),'gamma':(30,45)}
