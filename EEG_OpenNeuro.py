@@ -62,3 +62,19 @@ SFREQ    = CONFIG["SFREQ"]
 N_TIMES  = int(CONFIG["EPOCH_LEN"] * SFREQ)  
 
 BANDS = {'delta':(0.5,4),'theta':(4,8),'alpha':(8,13),'beta':(13,30),'gamma':(30,45)}
+
+# STEP 1  —  METADATA
+print("\nQuerying EEGDash...")
+client      = EEGDash()
+all_records = client.find(dataset="ds007526")
+rows = []
+seen = set()
+for rec in all_records:
+    if rec.get("task","") != "rest": continue
+    pinfo    = rec.get("participant_tsv", {}) or {}
+    sid      = pinfo.get("subject_id")
+    if not sid or sid in seen: continue
+    seen.add(sid)
+    bids_sub = str(rec.get("subject","")).zfill(3)
+    grp      = str(pinfo.get("group","")).upper()
+    rows.append(dict(subject_id=sid, bids_sub=bids_sub,label=0 if grp=="HC" else 1, record=rec))
