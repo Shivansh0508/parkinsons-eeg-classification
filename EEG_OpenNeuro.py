@@ -19,3 +19,17 @@ def check():
         sys.exit(1)
     print("All packages OK")
 check()
+import mne; mne.set_log_level('WARNING')
+import pywt, torch, torch.nn as nn, torch.optim as optim
+from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
+import torch.nn.functional as F
+from eegdash import EEGDash
+from scipy.signal import welch, butter, filtfilt, hilbert, spectrogram as sig_spectrogram
+from scipy.stats import kurtosis, skew
+from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import StratifiedKFold
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import (accuracy_score, roc_auc_score, confusion_matrix, f1_score, precision_score, roc_curve)
+from imblearn.over_sampling import SMOTE
