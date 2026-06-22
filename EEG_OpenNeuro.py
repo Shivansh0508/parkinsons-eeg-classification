@@ -42,3 +42,17 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"MNE {mne.__version__}  Python {sys.version[:6]}  Device: {DEVICE}")
 
 # CONFIG
+CONFIG = {
+    "CACHE_DIR" : r"C:\Users\Downloads\PD_EEG_v2",  
+    "OUT_DIR"   : r"C:\Users\Downloads\EEG_Results",
+    "SFREQ"     : 250,
+    "L_FREQ"    : 0.5,
+    "H_FREQ"    : 45.0,
+    "NOTCH"     : 50.0,
+    "EPOCH_LEN" : 4.0,
+    "OVERLAP"   : 0.5,
+    "AMP_THRESH": 150e-6,
+    "N_FOLDS"   : 5,
+    "SEED"      : 42,
+}
+os.makedirs(CONFIG["OUT_DIR"], exist_ok=True)
