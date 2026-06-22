@@ -33,3 +33,12 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import (accuracy_score, roc_auc_score, confusion_matrix, f1_score, precision_score, roc_curve)
 from imblearn.over_sampling import SMOTE
+from imblearn.pipeline import Pipeline as ImbPipeline
+import xgboost as xgb, lightgbm as lgb
+import matplotlib; matplotlib.use('Agg')
+import matplotlib.pyplot as plt, matplotlib.gridspec as gridspec
+import seaborn as sns
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"MNE {mne.__version__}  Python {sys.version[:6]}  Device: {DEVICE}")
+
+# CONFIG
