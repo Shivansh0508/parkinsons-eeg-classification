@@ -106,3 +106,15 @@ if loaded == 0:
 mask        = subjects_df.subject_id.isin(all_epochs.keys())
 subjects_df = subjects_df[mask].reset_index(drop=True)
 y           = subjects_df["label"].values
+
+# STEP 3  —  EPOCH-LEVEL FEATURE EXTRACTIONSTEP
+def get_ch_signal(ep, ch_names, fixed_ch, n_times):
+    """Extract fixed channel signals from one epoch. Missing → zeros."""
+    sigs = np.zeros((len(fixed_ch), n_times), dtype=np.float32)
+    for fi, ch in enumerate(fixed_ch):
+        if ch in ch_names:
+            idx = ch_names.index(ch)
+            sig = ep[idx]
+            L   = min(len(sig), n_times)
+            sigs[fi, :L] = sig[:L]
+    return sigs
