@@ -95,3 +95,14 @@ for _, row in subjects_df.iterrows():
         all_channels[sid] = list(np.load(ch_p, allow_pickle=True))
     else:
         print(f"  WARNING: no cache for {sid} — run v2 first to preprocess")
+loaded = sum(1 for s in subjects_df.subject_id if s in all_epochs)
+print(f"Loaded from cache: {loaded}/{len(subjects_df)}")
+
+if loaded == 0:
+    print("ERROR: No cached epochs found. Run eeg_pd_v2.py first to preprocess data.")
+    sys.exit(1)
+
+# Filter to subjects with cache
+mask        = subjects_df.subject_id.isin(all_epochs.keys())
+subjects_df = subjects_df[mask].reset_index(drop=True)
+y           = subjects_df["label"].values
