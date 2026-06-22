@@ -82,3 +82,16 @@ for rec in all_records:
 subjects_df = pd.DataFrame(rows).reset_index(drop=True)
 y           = subjects_df["label"].values
 print(f"Subjects: {len(subjects_df)}  PD={y.sum()}  HC={len(y)-y.sum()}")
+
+# STEP 2  —  LOAD PREPROCESSED EPOCHS FROM V2 CACHE
+all_epochs   = {}
+all_channels = {}
+for _, row in subjects_df.iterrows():
+    sid   = row["subject_id"]
+    ep_p  = os.path.join(CONFIG["CACHE_DIR"], f"{sid}_ep.npy")
+    ch_p  = os.path.join(CONFIG["CACHE_DIR"], f"{sid}_ch.npy")
+    if os.path.exists(ep_p) and os.path.exists(ch_p):
+        all_epochs[sid]   = np.load(ep_p)
+        all_channels[sid] = list(np.load(ch_p, allow_pickle=True))
+    else:
+        print(f"  WARNING: no cache for {sid} — run v2 first to preprocess")
