@@ -139,3 +139,13 @@ def wavelet_features_fast(signal, wavelet='db4', level=5):
             float(np.median(c)),
         ])
     return feats  # 10×6 = 60
+
+def band_features(psd, freqs):
+    total = np.trapezoid(psd, freqs) + 1e-10
+    bps   = {}
+    feats = []
+    for band,(lo,hi) in BANDS.items():
+        idx = np.logical_and(freqs>=lo, freqs<hi)   
+        bp  = float(np.trapezoid(psd[idx], freqs[idx]))
+        bps[band] = bp
+        feats.extend([bp, bp/total])
