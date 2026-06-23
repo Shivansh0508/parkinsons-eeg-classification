@@ -187,3 +187,10 @@ def bispectrum_feature(signal, sfreq):
  # Biphase: phase of (x_alpha * x_alpha * conj(x_beta))
     biphase = np.angle(h_a * h_a * np.conj(h_b))
     return [float(np.mean(np.cos(biphase))), float(np.mean(np.sin(biphase))), float(np.std(biphase))]  # 3 features
+
+def hjorth(sig):
+    act = float(np.var(sig))
+    d1  = np.diff(sig); d2 = np.diff(d1)
+    mob = float(np.sqrt(np.var(d1)/(act+1e-10)))
+    com = float(np.sqrt(np.var(d2)/(np.var(d1)+1e-10))/(mob+1e-10))
+    return [act, mob, com]
