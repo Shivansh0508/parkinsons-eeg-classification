@@ -265,3 +265,13 @@ epoch_X, epoch_y = extract_epoch_features(subjects_df, all_epochs, all_channels,
 for _, row in subjects_df.iterrows():
     assert row.subject_id in epoch_X, f"Missing: {row.subject_id}"
 print(f"All {len(epoch_X)} subjects have epoch features")
+
+# Cleanup NaN/Inf per-subject
+for sid in epoch_X:
+    X = epoch_X[sid]
+    for col in range(X.shape[1]):
+        bad = ~np.isfinite(X[:, col])
+        if bad.any():
+            med = np.nanmedian(X[:, col])
+            X[bad, col] = med if np.isfinite(med) else 0.
+    epoch_X[sid] = X
