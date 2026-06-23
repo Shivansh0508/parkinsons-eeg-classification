@@ -275,3 +275,10 @@ for sid in epoch_X:
             med = np.nanmedian(X[:, col])
             X[bad, col] = med if np.isfinite(med) else 0.
     epoch_X[sid] = X
+    
+# STEP 4  —  1D CNN  (EEGNet-style)
+# Input: raw EEG epochs (n_ch, n_times) = (14, 1000)
+class EEGNet(nn.Module):
+    """ EEGNet: compact CNN for EEG classification.
+    Lawhern et al. 2018 — best architecture for small EEG datasets.
+    Input: (B, 1, n_ch, n_times)"""
