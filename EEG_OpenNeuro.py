@@ -256,3 +256,12 @@ def extract_epoch_features(subjects_df, all_epochs, all_channels, config, fixed_
         epoch_X[sid] = np.array(ep_feats, dtype=np.float32)
         epoch_y[sid] = label
         print(f"  [{i+1}/{len(subjects_df)}] {sid}: " f"{n_ep} epochs × {len(ep_feats[0])} features", end='\r')
+
+np.savez(cache_ep_feat, epoch_X=epoch_X, epoch_y=epoch_y)
+    print(f"\nEpoch features saved.")
+    return epoch_X, epoch_y
+print(f"\nExtracting per-epoch features ({97*N_CH+20} per epoch)...")
+epoch_X, epoch_y = extract_epoch_features(subjects_df, all_epochs, all_channels, CONFIG, FIXED_CH)
+for _, row in subjects_df.iterrows():
+    assert row.subject_id in epoch_X, f"Missing: {row.subject_id}"
+print(f"All {len(epoch_X)} subjects have epoch features")
