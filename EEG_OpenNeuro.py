@@ -236,3 +236,14 @@ def extract_epoch_features(subjects_df, all_epochs, all_channels, config, fixed_
         epoch_y   = data["epoch_y"].item()
         print(f"Epoch features loaded from cache. Subjects: {len(epoch_X)}")
         return epoch_X, epoch_y
+
+    epoch_X = {}
+    epoch_y = {}
+    for i, row in subjects_df.iterrows():
+        sid   = row["subject_id"]
+        label = int(row["label"])
+        if sid not in all_epochs: continue
+        ep_data  = all_epochs[sid]    
+        ch_names = all_channels[sid]
+        n_ep     = len(ep_data)
+        n_times  = ep_data.shape[2]
