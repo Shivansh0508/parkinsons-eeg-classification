@@ -202,3 +202,12 @@ def features_one_epoch(ep_sigs, sfreq, fixed_ch):
     for ci in range(n_ch):
         sig = ep_sigs[ci].astype(float)
         freqs, psd = welch(sig, fs=sfreq, nperseg=min(sfreq, len(sig)//2), noverlap=sfreq//4)
+
+        feats.extend(wavelet_features_fast(sig))    # 60
+        feats.extend(band_features(psd, freqs))     # 15
+        feats.extend(spectrogram_features(sig, sfreq))  # 15
+        feats.extend(bispectrum_feature(sig, sfreq))    # 3
+        feats.extend(hjorth(sig))                   # 3
+        feats.extend(perm_entropy(sig))             # 1
+        # total per channel: 60+15+15+3+3+1 = 97
+
