@@ -225,3 +225,14 @@ def features_one_epoch(ep_sigs, sfreq, fixed_ch):
             feats.extend([float(np.abs(np.mean(np.exp(1j*phi_a)))),float(np.abs(np.mean(np.exp(1j*phi_b))))])
             done += 1
     return feats  
+
+def extract_epoch_features(subjects_df, all_epochs, all_channels, config, fixed_ch):
+    """ Returns:  epoch_X : dict sid -> (n_epochs, n_features)
+        epoch_y : dict sid -> int label """
+    cache_ep_feat = os.path.join(config["CACHE_DIR"], "ep_feats_v3.npz")
+    if os.path.exists(cache_ep_feat):
+        data      = np.load(cache_ep_feat, allow_pickle=True)
+        epoch_X   = data["epoch_X"].item()
+        epoch_y   = data["epoch_y"].item()
+        print(f"Epoch features loaded from cache. Subjects: {len(epoch_X)}")
+        return epoch_X, epoch_y
