@@ -220,3 +220,8 @@ def features_one_epoch(ep_sigs, sfreq, fixed_ch):
             if done >= 10: break
             si = ep_sigs[i].astype(float)
             sj = ep_sigs[j].astype(float)
+            phi_a = np.angle(hilbert(filtfilt(ba,aa,si))) - \ np.angle(hilbert(filtfilt(ba,aa,sj)))
+            phi_b = np.angle(hilbert(filtfilt(bb,ab,si))) - \ np.angle(hilbert(filtfilt(bb,ab,sj)))
+            feats.extend([float(np.abs(np.mean(np.exp(1j*phi_a)))),float(np.abs(np.mean(np.exp(1j*phi_b))))])
+            done += 1
+    return feats  
