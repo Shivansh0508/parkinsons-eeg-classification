@@ -149,3 +149,11 @@ def band_features(psd, freqs):
         bp  = float(np.trapezoid(psd[idx], freqs[idx]))
         bps[band] = bp
         feats.extend([bp, bp/total])
+ feats.extend([
+        bps['alpha']/(bps['beta']+1e-10),
+        bps['theta']/(bps['alpha']+1e-10),
+        bps['delta']/(bps['theta']+1e-10),
+        bps['alpha']+bps['beta'],           # total oscillatory
+        bps['theta']/(bps['beta']+1e-10),   # theta/beta (slowing marker)
+    ])
+    return feats  # 10+5 = 15
