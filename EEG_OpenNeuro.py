@@ -154,17 +154,14 @@ def band_features(psd, freqs):
         bps['theta']/(bps['alpha']+1e-10),
         bps['delta']/(bps['theta']+1e-10),
         bps['alpha']+bps['beta'],           # total oscillatory
-        bps['theta']/(bps['beta']+1e-10),   # theta/beta (slowing marker)
+        bps['theta']/(bps['beta']+1e-10),   # theta/beta
     ])
     return feats  
 
 def spectrogram_features(signal, sfreq, nperseg=64):
-    """
-    Compute spectrogram and extract statistical features from
-    time-frequency representation. Captures transient PD biomarkers.
-    """
-    f, t, Sxx = sig_spectrogram(signal, fs=sfreq, nperseg=nperseg,
-                                  noverlap=nperseg//2)
+    """ Compute spectrogram and extract statistical features from
+    time-frequency representation. Captures transient PD biomarkers. """
+    f, t, Sxx = sig_spectrogram(signal, fs=sfreq, nperseg=nperseg, noverlap=nperseg//2)
     # Band-specific time-averaged power variance
     feats = []
     for lo,hi in [(0.5,4),(4,8),(8,13),(13,30),(30,45)]:
