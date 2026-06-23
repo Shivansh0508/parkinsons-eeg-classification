@@ -117,3 +117,25 @@ def get_ch_signal(ep, ch_names, fixed_ch, n_times):
             L   = min(len(sig), n_times)
             sigs[fi, :L] = sig[:L]
     return sigs
+
+def wavelet_features_fast(signal, wavelet='db4', level=5):
+    coeffs = pywt.wavedec(signal, wavelet, level=level)
+    feats  = []
+    for c in coeffs[:6]:
+        c = np.asarray(c, dtype=float)
+        if len(c) < 2:
+            feats.extend([0.0]*10); continue
+        energy = float(np.sum(c**2))
+        feats.extend([
+            float(np.mean(np.abs(c))),      # abs mean
+            float(np.std(c)),               # std
+            energy,                          # energy
+            float(np.sum(np.diff(np.sign(c)) != 0)) / max(len(c)-1,1),  # MCR
+            float(np.mean(c[1:-1]**2 - c[:-2]*c[2:])) if len(c)>2 else 0.,  # Teager
+             float(-np.sum((np.abs(c)/(np.sum(np.abs(c))+1e-10)) *  np.log2(np.abs(c)/(np.sum(np.abs(c))+1e-10)+1e-10))),  # entropy
+            float(np.sqrt(energy/len(c))),  # RMS
+            float(kurtosis(c)),
+            float(skew(c)),
+            float(np.median(c)),
+        ])
+    return feats  # 10×6 = 60
