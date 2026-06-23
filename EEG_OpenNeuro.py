@@ -193,3 +193,12 @@ def hjorth(sig):
     mob = float(np.sqrt(np.var(d1)/(act+1e-10)))
     com = float(np.sqrt(np.var(d2)/(np.var(d1)+1e-10))/(mob+1e-10))
     return [act, mob, com]
+
+def features_one_epoch(ep_sigs, sfreq, fixed_ch):
+    """ ep_sigs: (n_fixed_ch, n_times)
+    Returns feature vector for ONE epoch. """
+    feats = []
+    n_ch  = len(fixed_ch)
+    for ci in range(n_ch):
+        sig = ep_sigs[ci].astype(float)
+        freqs, psd = welch(sig, fs=sfreq, nperseg=min(sfreq, len(sig)//2), noverlap=sfreq//4)
