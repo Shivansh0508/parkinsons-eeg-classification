@@ -1,5 +1,4 @@
 # EEG PD vs HC  —  DS007526 
-
 import os, sys, ssl, glob, warnings
 import numpy as np
 import pandas as pd
@@ -81,7 +80,7 @@ for rec in all_records:
     rows.append(dict(subject_id=sid, bids_sub=bids_sub,label=0 if grp=="HC" else 1, record=rec))
 
 subjects_df = pd.DataFrame(rows).reset_index(drop=True)
-y           = subjects_df["label"].values
+y  = subjects_df["label"].values
 print(f"Subjects: {len(subjects_df)}  PD={y.sum()}  HC={len(y)-y.sum()}")
 
 # STEP 2  —  LOAD PREPROCESSED EPOCHS FROM V2 CACHE
@@ -102,9 +101,9 @@ if loaded == 0:
     print("ERROR: No cached epochs found. Run eeg_pd_v2.py first to preprocess data.")
     sys.exit(1)
 # Filter to subjects with cache
-mask        = subjects_df.subject_id.isin(all_epochs.keys())
+mask = subjects_df.subject_id.isin(all_epochs.keys())
 subjects_df = subjects_df[mask].reset_index(drop=True)
-y           = subjects_df["label"].values
+y = subjects_df["label"].values
 
 # STEP 3  —  EPOCH-LEVEL FEATURE EXTRACTIONSTEP
 def get_ch_signal(ep, ch_names, fixed_ch, n_times):
@@ -184,7 +183,7 @@ def bispectrum_feature(signal, sfreq):
     s_a = filtfilt(ba, aa, signal)
     s_b = filtfilt(bb, ab, signal)
     h_a = hilbert(s_a); h_b = hilbert(s_b)
- # Biphase: phase of (x_alpha * x_alpha * conj(x_beta))
+     # Biphase: phase of (x_alpha * x_alpha * conj(x_beta))
     biphase = np.angle(h_a * h_a * np.conj(h_b))
     return [float(np.mean(np.cos(biphase))), float(np.mean(np.sin(biphase))), float(np.std(biphase))]  # 3 features
 
