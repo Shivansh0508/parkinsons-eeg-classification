@@ -184,3 +184,6 @@ def bispectrum_feature(signal, sfreq):
     s_a = filtfilt(ba, aa, signal)
     s_b = filtfilt(bb, ab, signal)
     h_a = hilbert(s_a); h_b = hilbert(s_b)
+ # Biphase: phase of (x_alpha * x_alpha * conj(x_beta))
+    biphase = np.angle(h_a * h_a * np.conj(h_b))
+    return [float(np.mean(np.cos(biphase))), float(np.mean(np.sin(biphase))), float(np.std(biphase))]  # 3 features
