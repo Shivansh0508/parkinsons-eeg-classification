@@ -236,7 +236,7 @@ def extract_epoch_features(subjects_df, all_epochs, all_channels, config, fixed_
         epoch_y   = data["epoch_y"].item()
         print(f"Epoch features loaded from cache. Subjects: {len(epoch_X)}")
         return epoch_X, epoch_y
-
+        
     epoch_X = {}
     epoch_y = {}
     for i, row in subjects_df.iterrows():
@@ -247,3 +247,12 @@ def extract_epoch_features(subjects_df, all_epochs, all_channels, config, fixed_
         ch_names = all_channels[sid]
         n_ep     = len(ep_data)
         n_times  = ep_data.shape[2]
+
+ ep_feats = []
+        for ei in range(n_ep):
+            ep_sigs = get_ch_signal(ep_data[ei], ch_names, fixed_ch, n_times)
+            fv  = features_one_epoch(ep_sigs, config["SFREQ"], fixed_ch)
+            ep_feats.append(fv)
+        epoch_X[sid] = np.array(ep_feats, dtype=np.float32)
+        epoch_y[sid] = label
+        print(f"  [{i+1}/{len(subjects_df)}] {sid}: " f"{n_ep} epochs × {len(ep_feats[0])} features", end='\r')
