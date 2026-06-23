@@ -165,3 +165,13 @@ def spectrogram_features(signal, sfreq, nperseg=64):
     # Band-specific time-averaged power variance
     feats = []
     for lo,hi in [(0.5,4),(4,8),(8,13),(13,30),(30,45)]:
+idx = np.logical_and(f>=lo, f<hi)
+        if idx.sum() == 0:
+            feats.extend([0.,0.,0.]); continue
+        band_power_over_time = Sxx[idx,:].mean(axis=0)
+        feats.extend([
+            float(np.var(band_power_over_time)),      # temporal variance
+            float(np.max(band_power_over_time)),      # peak
+            float(np.mean(band_power_over_time)),     # mean
+        ])
+    return feats  
