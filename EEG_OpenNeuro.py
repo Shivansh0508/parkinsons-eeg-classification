@@ -138,7 +138,7 @@ def wavelet_features_fast(signal, wavelet='db4', level=5):
             float(skew(c)),
             float(np.median(c)),
         ])
-    return feats  # 10×6 = 60
+    return feats 
 
 def band_features(psd, freqs):
     total = np.trapezoid(psd, freqs) + 1e-10
@@ -156,4 +156,4 @@ def band_features(psd, freqs):
         bps['alpha']+bps['beta'],           # total oscillatory
         bps['theta']/(bps['beta']+1e-10),   # theta/beta (slowing marker)
     ])
-    return feats  # 10+5 = 15
+    return feats  
