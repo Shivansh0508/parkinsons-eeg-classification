@@ -369,3 +369,6 @@ def train_eegnet_fold(train_sids, test_sids, all_epochs, all_channels,labels_map
     crit  = nn.CrossEntropyLoss(
         weight=torch.tensor([1.0/n_hc, 1.0/n_pd], dtype=torch.float32).to(device))
 
+    best_loss = float('inf')
+    best_state = None
+
