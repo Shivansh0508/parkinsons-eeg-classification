@@ -362,3 +362,10 @@ def train_eegnet_fold(train_sids, test_sids, all_epochs, all_channels,labels_map
     sampler = WeightedRandomSampler(torch.tensor(w,dtype=torch.float32), len(tr_ds), replacement=True)
     tr_ld = DataLoader(tr_ds, batch_size=batch_size, sampler=sampler, num_workers=0, pin_memory=(device.type=='cuda'))
     te_ld = DataLoader(te_ds, batch_size=batch_size, shuffle=False, num_workers=0)
+
+    model = EEGNet(n_ch=len(fixed_ch), n_times=n_times).to(device)
+    opt   = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-4)
+    sched = optim.lr_scheduler.CosineAnnealingLR(opt, T_max=n_epochs, eta_min=1e-5)
+    crit  = nn.CrossEntropyLoss(
+        weight=torch.tensor([1.0/n_hc, 1.0/n_pd], dtype=torch.float32).to(device))
+
