@@ -302,3 +302,11 @@ def __init__(self, n_ch=14, n_times=1000, n_classes=2,F1=8, D=2, F2=16, dropout=
         self.pool3  = nn.AvgPool2d((1,8))
         self.drop3  = nn.Dropout(dropout)
         # Compute flatten size
+        with torch.no_grad():
+            x = torch.zeros(1,1,n_ch,n_times)
+            x = self.pool2(self.act2(self.bn2(self.conv2(
+                   self.bn1(self.conv1(x))))))
+            x = self.pool3(self.act3(self.bn3(self.conv3b(
+                   self.conv3a(x)))))
+            self.flat_size = x.numel()
+        self.fc = nn.Linear(self.flat_size, n_classes)
