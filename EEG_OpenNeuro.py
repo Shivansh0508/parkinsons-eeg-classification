@@ -341,3 +341,14 @@ def __len__(self):  return len(self.items)
             m = sigs[ci].mean(); s = sigs[ci].std() + 1e-8
             sigs[ci] = (sigs[ci] - m) / s
         if self.augment:
+             if np.random.rand() > 0.5:
+                sigs += np.random.normal(0, 0.05, sigs.shape).astype(np.float32)
+            if np.random.rand() > 0.5:
+                sigs *= np.random.uniform(0.9, 1.1)
+        x = torch.tensor(sigs, dtype=torch.float32).unsqueeze(0) 
+        return x, torch.tensor(label, dtype=torch.long)
+
+
+def train_eegnet_fold(train_sids, test_sids, all_epochs, all_channels,
+                      labels_map, fixed_ch, n_times, device,
+                      n_epochs=60, batch_size=32, lr=1e-3):
