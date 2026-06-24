@@ -332,3 +332,12 @@ class EpochDataset(Dataset):
                 sigs = get_ch_signal(ep_data[ei], ch_names, fixed_ch, n_times)
                 self.items.append((sigs.astype(np.float32), label))
 
+def __len__(self):  return len(self.items)
+
+    def __getitem__(self, idx):
+        sigs, label = self.items[idx]
+        # Normalize per-channel
+        for ci in range(sigs.shape[0]):
+            m = sigs[ci].mean(); s = sigs[ci].std() + 1e-8
+            sigs[ci] = (sigs[ci] - m) / s
+        if self.augment:
