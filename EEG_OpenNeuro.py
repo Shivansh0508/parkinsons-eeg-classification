@@ -283,8 +283,7 @@ class EEGNet(nn.Module):
     Lawhern et al. 2018 — best architecture for small EEG datasets.
     Input: (B, 1, n_ch, n_times)"""
 
-def __init__(self, n_ch=14, n_times=1000, n_classes=2,
-                 F1=8, D=2, F2=16, dropout=0.5):
+def __init__(self, n_ch=14, n_times=1000, n_classes=2,F1=8, D=2, F2=16, dropout=0.5):
         super().__init__()
         # Temporal convolution
         self.conv1  = nn.Conv2d(1, F1, (1, 64), padding=(0,32), bias=False)
@@ -296,3 +295,10 @@ def __init__(self, n_ch=14, n_times=1000, n_classes=2,
         self.pool2  = nn.AvgPool2d((1,4))
         self.drop2  = nn.Dropout(dropout)
         # Separable convolution
+        self.conv3a = nn.Conv2d(F1*D, F1*D, (1,16), padding=(0,8),groups=F1*D, bias=False)
+        self.conv3b = nn.Conv2d(F1*D, F2, 1, bias=False)
+        self.bn3    = nn.BatchNorm2d(F2)
+        self.act3   = nn.ELU()
+        self.pool3  = nn.AvgPool2d((1,8))
+        self.drop3  = nn.Dropout(dropout)
+        # Compute flatten size
