@@ -354,3 +354,11 @@ def train_eegnet_fold(train_sids, test_sids, all_epochs, all_channels,labels_map
     # Datasets
     tr_ds = EpochDataset(train_sids, all_epochs, all_channels,labels_map, fixed_ch, n_times, augment=True)
     te_ds = EpochDataset(test_sids,  all_epochs, all_channels,labels_map, fixed_ch, n_times, augment=False)
+
+# Weighted sampler for class balance
+    labels_tr = [item[1] for item in tr_ds.items]
+    n_pd = sum(labels_tr); n_hc = len(labels_tr) - n_pd
+    w  = [1.0/n_hc if l==0 else 1.0/n_pd for l in labels_tr]
+    sampler = WeightedRandomSampler(torch.tensor(w,dtype=torch.float32), len(tr_ds), replacement=True)
+    tr_ld = DataLoader(tr_ds, batch_size=batch_size, sampler=sampler, num_workers=0, pin_memory=(device.type=='cuda'))
+    te_ld = DataLoader(te_ds, batch_size=batch_size, shuffle=False, num_workers=0)
