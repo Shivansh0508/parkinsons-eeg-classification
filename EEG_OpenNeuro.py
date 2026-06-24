@@ -290,3 +290,9 @@ def __init__(self, n_ch=14, n_times=1000, n_classes=2,
         self.conv1  = nn.Conv2d(1, F1, (1, 64), padding=(0,32), bias=False)
         self.bn1    = nn.BatchNorm2d(F1)
         # Depthwise spatial convolution
+         self.conv2  = nn.Conv2d(F1, F1*D, (n_ch,1), groups=F1, bias=False)
+        self.bn2    = nn.BatchNorm2d(F1*D)
+        self.act2   = nn.ELU()
+        self.pool2  = nn.AvgPool2d((1,4))
+        self.drop2  = nn.Dropout(dropout)
+        # Separable convolution
