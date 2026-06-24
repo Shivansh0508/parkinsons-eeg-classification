@@ -265,7 +265,6 @@ epoch_X, epoch_y = extract_epoch_features(subjects_df, all_epochs, all_channels,
 for _, row in subjects_df.iterrows():
     assert row.subject_id in epoch_X, f"Missing: {row.subject_id}"
 print(f"All {len(epoch_X)} subjects have epoch features")
-
 # Cleanup NaN/Inf per-subject
 for sid in epoch_X:
     X = epoch_X[sid]
@@ -349,12 +348,10 @@ def __len__(self):  return len(self.items)
 
 
 def train_eegnet_fold(train_sids, test_sids, all_epochs, all_channels,labels_map, fixed_ch, n_times, device, n_epochs=60, batch_size=32, lr=1e-3):
-
             """Train EEGNet on train_sids epochs, predict on test_sids → per-subject prob."""
     # Datasets
     tr_ds = EpochDataset(train_sids, all_epochs, all_channels,labels_map, fixed_ch, n_times, augment=True)
     te_ds = EpochDataset(test_sids,  all_epochs, all_channels,labels_map, fixed_ch, n_times, augment=False)
-
 # Weighted sampler for class balance
     labels_tr = [item[1] for item in tr_ds.items]
     n_pd = sum(labels_tr); n_hc = len(labels_tr) - n_pd
@@ -368,7 +365,6 @@ def train_eegnet_fold(train_sids, test_sids, all_epochs, all_channels,labels_map
     sched = optim.lr_scheduler.CosineAnnealingLR(opt, T_max=n_epochs, eta_min=1e-5)
     crit  = nn.CrossEntropyLoss(
         weight=torch.tensor([1.0/n_hc, 1.0/n_pd], dtype=torch.float32).to(device))
-
     best_loss = float('inf')
     best_state = None
 
