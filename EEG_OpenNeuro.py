@@ -317,3 +317,18 @@ def forward(self, x):
         x = self.drop3(self.pool3(self.act3(self.bn3(
             self.conv3b(self.conv3a(x))))))
         return self.fc(x.view(x.size(0), -1))
+
+class EpochDataset(Dataset):
+    def __init__(self, sids, all_epochs, all_channels, labels_map,
+                 fixed_ch, n_times, augment=False):
+        self.items   = []
+        self.augment = augment
+        for sid in sids:
+            if sid not in all_epochs: continue
+            ep_data  = all_epochs[sid]
+            ch_names = all_channels[sid]
+            label    = labels_map[sid]
+            for ei in range(len(ep_data)):
+                sigs = get_ch_signal(ep_data[ei], ch_names, fixed_ch, n_times)
+                self.items.append((sigs.astype(np.float32), label))
+
