@@ -319,8 +319,7 @@ def forward(self, x):
         return self.fc(x.view(x.size(0), -1))
 
 class EpochDataset(Dataset):
-    def __init__(self, sids, all_epochs, all_channels, labels_map,
-                 fixed_ch, n_times, augment=False):
+    def __init__(self, sids, all_epochs, all_channels, labels_map,fixed_ch, n_times, augment=False):
         self.items   = []
         self.augment = augment
         for sid in sids:
