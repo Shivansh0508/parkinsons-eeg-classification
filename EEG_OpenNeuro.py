@@ -348,6 +348,9 @@ def __len__(self):  return len(self.items)
         return x, torch.tensor(label, dtype=torch.long)
 
 
-def train_eegnet_fold(train_sids, test_sids, all_epochs, all_channels,
-                      labels_map, fixed_ch, n_times, device,
-                      n_epochs=60, batch_size=32, lr=1e-3):
+def train_eegnet_fold(train_sids, test_sids, all_epochs, all_channels,labels_map, fixed_ch, n_times, device, n_epochs=60, batch_size=32, lr=1e-3):
+
+            """Train EEGNet on train_sids epochs, predict on test_sids → per-subject prob."""
+    # Datasets
+    tr_ds = EpochDataset(train_sids, all_epochs, all_channels,labels_map, fixed_ch, n_times, augment=True)
+    te_ds = EpochDataset(test_sids,  all_epochs, all_channels,labels_map, fixed_ch, n_times, augment=False)
