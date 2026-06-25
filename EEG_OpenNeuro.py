@@ -387,3 +387,11 @@ for epoch in range(n_epochs):
                     x, y_b = x.to(device), y_b.to(device)
                     loss   = crit(model(x), y_b)
                     losses.append(loss.item())
+
+val_loss = np.mean(losses)
+            if val_loss < best_loss:
+                best_loss  = val_loss
+                best_state = {k:v.clone() for k,v in model.state_dict().items()}
+
+    if best_state:
+        model.load_state_dict(best_state)
