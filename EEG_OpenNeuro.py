@@ -435,3 +435,12 @@ val_loss = np.mean(losses)
         if sid not in all_epochs: continue
         for _ in range(len(all_epochs[sid])):
             ep_sids_list.append(sid)
+
+ # Predict all at once
+    all_prob_ep = []
+    batch_x = []
+    for sigs, label in te_ds.items:
+        m = sigs.mean(axis=1, keepdims=True)
+        s = sigs.std(axis=1, keepdims=True) + 1e-8
+        sigs_n = (sigs - m) / s
+        batch_x.append(torch.tensor(sigs_n, dtype=torch.float32).unsqueeze(0))
