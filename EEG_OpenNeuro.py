@@ -402,3 +402,11 @@ val_loss = np.mean(losses)
         for x, _ in te_ld:
             # track which subject each epoch belongs to
             pass  
+ # Re-iterate keeping track of subject
+    idx_ptr = 0
+    all_probs_ep = []
+    with torch.no_grad():
+        for x, y_b in te_ld:
+            x = x.to(device)
+            p = torch.softmax(model(x), dim=1)[:,1].cpu().numpy()
+            all_probs_ep.extend(p.tolist())
