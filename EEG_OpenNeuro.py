@@ -378,3 +378,12 @@ for epoch in range(n_epochs):
             opt.step()
         sched.step()
 
+ # Track val loss every 10 epochs for early stopping
+        if (epoch+1) % 10 == 0:
+            model.eval()
+            losses = []
+            with torch.no_grad():
+                for x, y_b in te_ld:
+                    x, y_b = x.to(device), y_b.to(device)
+                    loss   = crit(model(x), y_b)
+                    losses.append(loss.item())
