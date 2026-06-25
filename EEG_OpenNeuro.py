@@ -447,5 +447,12 @@ batch_x  = torch.stack(batch_x).to(device)
     with torch.no_grad():
         for start in range(0, len(batch_x), 64):
             chunk = batch_x[start:start+64]
-            p     = torch.softmax(model(chunk), dim=1)[:,1].cpu().numpy()
+            p = torch.softmax(model(chunk), dim=1)[:,1].cpu().numpy()
             all_prob_ep.extend(p.tolist())
+ # Aggregate per subject
+    subj_prob_cnn = {}
+    for ep_i, sid in enumerate(ep_sids_list):
+        if sid not in subj_prob_cnn:
+            subj_prob_cnn[sid] = []
+        if ep_i < len(all_prob_ep):
+            subj_prob_cnn[sid].append(all_prob_ep[ep_i])
