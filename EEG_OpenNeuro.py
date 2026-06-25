@@ -377,7 +377,6 @@ for epoch in range(n_epochs):
             nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             opt.step()
         sched.step()
-
  # Track val loss every 10 epochs for early stopping
         if (epoch+1) % 10 == 0:
             model.eval()
@@ -392,6 +391,14 @@ val_loss = np.mean(losses)
             if val_loss < best_loss:
                 best_loss  = val_loss
                 best_state = {k:v.clone() for k,v in model.state_dict().items()}
-
     if best_state:
         model.load_state_dict(best_state)
+# Predict per epoch, then aggregate per subject
+    model.eval()
+    # Build mapping: epoch_idx -> (sid, label)
+    sid_probs  = {sid: [] for sid in test_sids}
+    sid_labels = {}
+    with torch.no_grad():
+        for x, _ in te_ld:
+            # track which subject each epoch belongs to
+            pass  
