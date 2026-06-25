@@ -368,3 +368,13 @@ def train_eegnet_fold(train_sids, test_sids, all_epochs, all_channels,labels_map
     best_loss = float('inf')
     best_state = None
 
+for epoch in range(n_epochs):
+        model.train()
+        for x, y_b in tr_ld:
+            x, y_b = x.to(device), y_b.to(device)
+            opt.zero_grad()
+            crit(model(x), y_b).backward()
+            nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+            opt.step()
+        sched.step()
+
