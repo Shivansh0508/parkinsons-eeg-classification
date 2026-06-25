@@ -428,3 +428,10 @@ val_loss = np.mean(losses)
         for item_idx, (sigs, label) in enumerate(te_ds.items):
             # Find which subject this belongs to
             pass
+
+ # Rebuild test dataset tracking subject per epoch
+    ep_sids_list = []
+    for sid in test_sids:
+        if sid not in all_epochs: continue
+        for _ in range(len(all_epochs[sid])):
+            ep_sids_list.append(sid)
