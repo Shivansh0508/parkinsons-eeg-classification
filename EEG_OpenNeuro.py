@@ -476,3 +476,11 @@ def remove_redundant(X, r=0.95):
             if keep[j] and abs(corr[i,j]) > r:
                 keep[j] = False
     return X[:, keep], keep
+
+def engineer(Xtr, Xte, mask_lv, mask_red):
+    """Apply same feature selection masks (fitted on train) to test."""
+    Xtr_s = Xtr[:, mask_lv][:, mask_red]
+    Xte_s = Xte[:, mask_lv][:, mask_red]
+    ltr   = np.sign(Xtr_s) * np.log1p(np.abs(Xtr_s))
+    sq_tr = Xtr_s**2
+    Etr   = np.hstack([Xtr_s, ltr, sq_tr])
