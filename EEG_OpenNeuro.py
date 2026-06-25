@@ -460,3 +460,5 @@ subj_mean_prob = {sid: np.mean(probs)
                       for sid, probs in subj_prob_cnn.items()
                       if probs}
     return subj_mean_prob
+
+# STEP 5  —  ML ENSEMBLE ON EPOCH-LEVEL FEATURES (with majority vote)
