@@ -484,3 +484,8 @@ def engineer(Xtr, Xte, mask_lv, mask_red):
     ltr   = np.sign(Xtr_s) * np.log1p(np.abs(Xtr_s))
     sq_tr = Xtr_s**2
     Etr   = np.hstack([Xtr_s, ltr, sq_tr])
+    lte   = np.sign(Xte_s) * np.log1p(np.abs(Xte_s))
+    sq_te = Xte_s**2
+    Ete   = np.hstack([Xte_s, lte, sq_te])
+    m = Etr.mean(0); s = Etr.std(0)+1e-8
+    return (Etr-m)/s, (Ete-m)/s
