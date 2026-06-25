@@ -465,3 +465,14 @@ subj_mean_prob = {sid: np.mean(probs)
 def remove_low_var(X, thr=1e-6):
     keep = X.std(axis=0) > thr
     return X[:, keep], keep
+
+def remove_redundant(X, r=0.95):
+    corr = np.corrcoef(X.T)
+    n    = X.shape[1]
+    keep = np.ones(n, dtype=bool)
+    for i in range(n):
+        if not keep[i]: continue
+        for j in range(i+1, n):
+            if keep[j] and abs(corr[i,j]) > r:
+                keep[j] = False
+    return X[:, keep], keep
