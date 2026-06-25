@@ -410,7 +410,6 @@ val_loss = np.mean(losses)
             x = x.to(device)
             p = torch.softmax(model(x), dim=1)[:,1].cpu().numpy()
             all_probs_ep.extend(p.tolist())
-
 # Map back to subjects
     ep_ptr = 0
     subj_prob_cnn = {}
@@ -419,5 +418,5 @@ val_loss = np.mean(losses)
         n_ep = len(te_ds.items)  # approximate
         # Count epochs for this subject
         n_ep_sid = sum(1 for item in te_ds.items
-                       if True)  # recount properly below
+                       if True)
         sid_labels[sid] = labels_map[sid]
