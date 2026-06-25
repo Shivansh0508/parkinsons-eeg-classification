@@ -462,3 +462,6 @@ subj_mean_prob = {sid: np.mean(probs)
     return subj_mean_prob
 
 # STEP 5  —  ML ENSEMBLE ON EPOCH-LEVEL FEATURES (with majority vote)
+def remove_low_var(X, thr=1e-6):
+    keep = X.std(axis=0) > thr
+    return X[:, keep], keep
