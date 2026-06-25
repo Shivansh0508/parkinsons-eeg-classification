@@ -455,4 +455,8 @@ batch_x  = torch.stack(batch_x).to(device)
         if sid not in subj_prob_cnn:
             subj_prob_cnn[sid] = []
         if ep_i < len(all_prob_ep):
-            subj_prob_cnn[sid].append(all_prob_ep[ep_i])
+            subj_prob_cnn[sid].append(all_prob_ep[ep_i])    
+subj_mean_prob = {sid: np.mean(probs)
+                      for sid, probs in subj_prob_cnn.items()
+                      if probs}
+    return subj_mean_prob
