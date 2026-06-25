@@ -420,3 +420,11 @@ val_loss = np.mean(losses)
         n_ep_sid = sum(1 for item in te_ds.items
                        if True)
         sid_labels[sid] = labels_map[sid]
+
+# Proper per-subject aggregation
+    all_probs_ep2 = []
+    with torch.no_grad():
+        x_list, ep_sids = [], []
+        for item_idx, (sigs, label) in enumerate(te_ds.items):
+            # Find which subject this belongs to
+            pass
