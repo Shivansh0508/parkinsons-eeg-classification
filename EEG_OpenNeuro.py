@@ -420,7 +420,6 @@ val_loss = np.mean(losses)
         n_ep_sid = sum(1 for item in te_ds.items
                        if True)
         sid_labels[sid] = labels_map[sid]
-
 # Proper per-subject aggregation
     all_probs_ep2 = []
     with torch.no_grad():
@@ -428,14 +427,12 @@ val_loss = np.mean(losses)
         for item_idx, (sigs, label) in enumerate(te_ds.items):
             # Find which subject this belongs to
             pass
-
  # Rebuild test dataset tracking subject per epoch
     ep_sids_list = []
     for sid in test_sids:
         if sid not in all_epochs: continue
         for _ in range(len(all_epochs[sid])):
             ep_sids_list.append(sid)
-
  # Predict all at once
     all_prob_ep = []
     batch_x = []
