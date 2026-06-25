@@ -489,3 +489,6 @@ def engineer(Xtr, Xte, mask_lv, mask_red):
     Ete   = np.hstack([Xte_s, lte, sq_te])
     m = Etr.mean(0); s = Etr.std(0)+1e-8
     return (Etr-m)/s, (Ete-m)/s
+
+def predict_ml_epoch_vote(train_sids, test_sids, epoch_X, epoch_y, n_pd_tr, n_hc_tr, fold_i):
+    """ Pool all training epochs → fit 3 classifiers → predict test epochs → vote. """
