@@ -441,3 +441,11 @@ val_loss = np.mean(losses)
         s = sigs.std(axis=1, keepdims=True) + 1e-8
         sigs_n = (sigs - m) / s
         batch_x.append(torch.tensor(sigs_n, dtype=torch.float32).unsqueeze(0))
+
+batch_x  = torch.stack(batch_x).to(device)
+    model.eval()
+    with torch.no_grad():
+        for start in range(0, len(batch_x), 64):
+            chunk = batch_x[start:start+64]
+            p     = torch.softmax(model(chunk), dim=1)[:,1].cpu().numpy()
+            all_prob_ep.extend(p.tolist())
