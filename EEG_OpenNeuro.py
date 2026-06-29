@@ -544,3 +544,12 @@ for pipe in pipes:
         pipe.fit(Etr_norm, ytr)
 
     # Predict test subjects (epoch-level → vote)
+     subj_ml_prob = {}
+    for sid in test_sids:
+        if sid not in epoch_X: continue
+        Xte_raw = epoch_X[sid].astype(np.float32)
+        Xte_s   = Xte_raw[:, mask_lv][:, mask_red]
+        log_te  = np.sign(Xte_s)*np.log1p(np.abs(Xte_s))
+        sq_te   = Xte_s**2
+        Xte_f   = np.hstack([Xte_s, log_te, sq_te])
+        Xte_n   = (Xte_f - m) / s
