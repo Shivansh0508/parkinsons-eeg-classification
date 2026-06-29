@@ -542,7 +542,6 @@ pipes = [
     ]
 for pipe in pipes:
         pipe.fit(Etr_norm, ytr)
-
     # Predict test subjects (epoch-level → vote)
      subj_ml_prob = {}
     for sid in test_sids:
@@ -553,7 +552,6 @@ for pipe in pipes:
         sq_te   = Xte_s**2
         Xte_f   = np.hstack([Xte_s, log_te, sq_te])
         Xte_n   = (Xte_f - m) / s
-
  # Average probability across classifiers and across epochs
         ep_probs = np.zeros(len(Xte_n))
         for pipe in pipes:
