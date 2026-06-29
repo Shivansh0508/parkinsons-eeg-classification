@@ -449,7 +449,7 @@ batch_x  = torch.stack(batch_x).to(device)
             chunk = batch_x[start:start+64]
             p = torch.softmax(model(chunk), dim=1)[:,1].cpu().numpy()
             all_prob_ep.extend(p.tolist())
- # Aggregate per subject
+ # Aggregate per subjectx
     subj_prob_cnn = {}
     for ep_i, sid in enumerate(ep_sids_list):
         if sid not in subj_prob_cnn:
@@ -492,3 +492,12 @@ def engineer(Xtr, Xte, mask_lv, mask_red):
 
 def predict_ml_epoch_vote(train_sids, test_sids, epoch_X, epoch_y, n_pd_tr, n_hc_tr, fold_i):
     """ Pool all training epochs → fit 3 classifiers → predict test epochs → vote. """
+
+ # Pool training data
+    Xtr_list, ytr_list = [], []
+    for sid in train_sids:
+        if sid not in epoch_X: continue
+        Xtr_list.append(epoch_X[sid])
+        ytr_list.extend([epoch_y[sid]] * len(epoch_X[sid]))
+    Xtr = np.vstack(Xtr_list).astype(np.float32)
+    ytr = np.array(ytr_list)
