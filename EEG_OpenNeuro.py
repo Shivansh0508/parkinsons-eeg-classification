@@ -558,4 +558,8 @@ for pipe in pipes:
             ep_probs += pipe.predict_proba(Xte_n)[:,1]
         ep_probs /= len(pipes)
         subj_ml_prob[sid] = float(np.mean(ep_probs))  # mean vote
+ return subj_ml_prob
 
+# STEP 6  —  STRATIFIED 5-FOLD CV
+def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
+           fixed_ch, n_times, device, n_folds=5):
