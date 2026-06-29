@@ -553,3 +553,11 @@ for pipe in pipes:
         sq_te   = Xte_s**2
         Xte_f   = np.hstack([Xte_s, log_te, sq_te])
         Xte_n   = (Xte_f - m) / s
+
+ # Average probability across classifiers and across epochs
+        ep_probs = np.zeros(len(Xte_n))
+        for pipe in pipes:
+            ep_probs += pipe.predict_proba(Xte_n)[:,1]
+        ep_probs /= len(pipes)
+        subj_ml_prob[sid] = float(np.mean(ep_probs))  # mean vote
+
