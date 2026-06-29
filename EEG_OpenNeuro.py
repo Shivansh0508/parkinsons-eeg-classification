@@ -540,4 +540,7 @@ pipes = [
                      ("clf",LogisticRegression(C=0.1,class_weight="balanced",
                                                max_iter=2000,random_state=42))]),
     ]
+for pipe in pipes:
+        pipe.fit(Etr_norm, ytr)
 
+    # Predict test subjects (epoch-level → vote)
