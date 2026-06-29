@@ -517,3 +517,27 @@ def predict_ml_epoch_vote(train_sids, test_sids, epoch_X, epoch_y, n_pd_tr, n_hc
     Etr_full  = np.hstack([Etr_all, log_tr, sq_tr])
     m         = Etr_full.mean(0); s = Etr_full.std(0)+1e-8
     Etr_norm  = (Etr_full-m)/s
+pipes = [
+        ImbPipeline([("sm",SMOTE(random_state=42,k_neighbors=k_nn)),
+                     ("pca",PCA(pca_k,random_state=42)),
+                     ("clf",SVC(kernel="rbf",C=10,gamma="scale",
+                                class_weight="balanced",
+                                probability=True,random_state=42))]),
+        ImbPipeline([("sm",SMOTE(random_state=42,k_neighbors=k_nn)),
+                     ("pca",PCA(pca_k,random_state=42)),
+                     ("clf",xgb.XGBClassifier(n_estimators=300,max_depth=4,
+                                              learning_rate=0.05,
+                                              scale_pos_weight=pos_w,
+                                              verbosity=0,random_state=42))]),
+        ImbPipeline([("sm",SMOTE(random_state=42,k_neighbors=k_nn)),
+                     ("pca",PCA(pca_k,random_state=42)),
+                     ("clf",lgb.LGBMClassifier(n_estimators=300,max_depth=4,
+                                               learning_rate=0.05,
+                                               scale_pos_weight=pos_w,
+                                               verbose=-1,random_state=42))]),
+        ImbPipeline([("sm",SMOTE(random_state=42,k_neighbors=k_nn)),
+                     ("pca",PCA(pca_k,random_state=42)),
+                     ("clf",LogisticRegression(C=0.1,class_weight="balanced",
+                                               max_iter=2000,random_state=42))]),
+    ]
+
