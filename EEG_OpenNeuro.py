@@ -501,3 +501,12 @@ def predict_ml_epoch_vote(train_sids, test_sids, epoch_X, epoch_y, n_pd_tr, n_hc
         ytr_list.extend([epoch_y[sid]] * len(epoch_X[sid]))
     Xtr = np.vstack(Xtr_list).astype(np.float32)
     ytr = np.array(ytr_list)
+# Feature selection on training epochs (no leakage)
+    _, mask_lv  = remove_low_var(Xtr)
+    Xtr_lv      = Xtr[:, mask_lv]
+    _, mask_red = remove_redundant(Xtr_lv, r=0.95)
+
+    min_class = min(int(ytr.sum()), int(len(ytr)-ytr.sum()))
+    k_nn      = min(5, min_class-1)
+    pos_w     = n_hc_tr / max(n_pd_tr, 1)
+    pca_k     = min(80, Xtr[:, mask_lv][:, mask_red].shape[1]*3, len(ytr)-1)
