@@ -510,3 +510,10 @@ def predict_ml_epoch_vote(train_sids, test_sids, epoch_X, epoch_y, n_pd_tr, n_hc
     k_nn      = min(5, min_class-1)
     pos_w     = n_hc_tr / max(n_pd_tr, 1)
     pca_k     = min(80, Xtr[:, mask_lv][:, mask_red].shape[1]*3, len(ytr)-1)
+     # Apply to train
+    Etr_all   = Xtr[:, mask_lv][:, mask_red]
+    log_tr    = np.sign(Etr_all)*np.log1p(np.abs(Etr_all))
+    sq_tr     = Etr_all**2
+    Etr_full  = np.hstack([Etr_all, log_tr, sq_tr])
+    m         = Etr_full.mean(0); s = Etr_full.std(0)+1e-8
+    Etr_norm  = (Etr_full-m)/s
