@@ -569,19 +569,10 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
     records  = []
     all_true, all_prob, all_pred = [], [], []
 
- n_pd_tot = int(y.sum()); n_hc_tot = int(len(y)-n_pd_tot)
+    n_pd_tot = int(y.sum()); n_hc_tot = int(len(y)-n_pd_tot)
     labels_map = {row.subject_id: row.label
                   for _, row in subjects_df.iterrows()}
- for fold_i, (tri, tei) in enumerate(skf.split(sids_arr, y)):
-        train_sids = list(sids_arr[tri])
-        test_sids  = list(sids_arr[tei])
-        ytr        = y[tri]; yte = y[tei]
-        n_pd_tr    = int(ytr.sum()); n_hc_tr = int(len(ytr)-n_pd_tr)
-    print(f"\nStratified {n_folds}-Fold CV  "\
-          print(f"\nFold {fold_i+1}  "
-              f"Train: {len(train_sids)} (PD={n_pd_tr} HC={n_hc_tr})  "
-              f"Test: {len(test_sids)} "
-              f"(PD={int(yte.sum())} HC={int(len(yte)-yte.sum())})")
 
+    print(f"\nStratified {n_folds}-Fold CV  "
           f"n={len(y)} PD={n_pd_tot} HC={n_hc_tot}")
     print("="*70)
