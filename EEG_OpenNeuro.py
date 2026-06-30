@@ -587,3 +587,16 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
               f"Train: {len(train_sids)} (PD={n_pd_tr} HC={n_hc_tr})  "
               f"Test: {len(test_sids)} "
               f"(PD={int(yte.sum())} HC={int(len(yte)-yte.sum())})")
+
+ # --- ML ensemble with epoch-level vote ---
+        print("  [ML] Training ensemble on pooled epochs...")
+        ml_probs = predict_ml_epoch_vote(
+            train_sids, test_sids, epoch_X, epoch_y,
+            n_pd_tr, n_hc_tr, fold_i)
+
+        # --- EEGNet ---
+        print("  [CNN] Training EEGNet...")
+        cnn_probs = train_eegnet_fold(
+            train_sids, test_sids, all_epochs, all_channels,
+            labels_map, fixed_ch, n_times, device,
+            n_epochs=60, batch_size=32, lr=1e-3)
