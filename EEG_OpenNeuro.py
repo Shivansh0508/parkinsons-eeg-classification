@@ -641,3 +641,13 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
         all_true.extend(true_labels.tolist())
         all_prob.extend(final_probs.tolist())
         all_pred.extend(pred.tolist())
+
+ mets = ["acc","auc","sens","spec","f1","prec"]
+    agg  = {m:(np.mean([r[m] for r in records]),
+               np.std([r[m] for r in records])) for m in mets}
+    tn_g,fp_g,fn_g,tp_g = confusion_matrix(all_true,all_pred).ravel()
+
+    return dict(records=records, agg=agg,
+                all_true=all_true, all_prob=all_prob, all_pred=all_pred,
+                global_cm=np.array([[tn_g,fp_g],[fn_g,tp_g]]))
+
