@@ -563,45 +563,40 @@ for pipe in pipes:
 # STEP 6  —  STRATIFIED 5-FOLD CV
 def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
            fixed_ch, n_times, device, n_folds=5):
-
     sids_arr = subjects_df["subject_id"].values
     skf      = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42)
     records  = []
     all_true, all_prob, all_pred = [], [], []
-
     n_pd_tot = int(y.sum()); n_hc_tot = int(len(y)-n_pd_tot)
     labels_map = {row.subject_id: row.label
                   for _, row in subjects_df.iterrows()}
-
     print(f"\nStratified {n_folds}-Fold CV  "
           f"n={len(y)} PD={n_pd_tot} HC={n_hc_tot}")
     print("="*70)
-
  for fold_i, (tri, tei) in enumerate(skf.split(sids_arr, y)):
         train_sids = list(sids_arr[tri])
         test_sids  = list(sids_arr[tei])
         ytr        = y[tri]; yte = y[tei]
         n_pd_tr    = int(ytr.sum()); n_hc_tr = int(len(ytr)-n_pd_tr)
-
  print(f"\nFold {fold_i+1}  "
               f"Train: {len(train_sids)} (PD={n_pd_tr} HC={n_hc_tr})  "
               f"Test: {len(test_sids)} "
               f"(PD={int(yte.sum())} HC={int(len(yte)-yte.sum())})")
 
- # --- ML ensemble with epoch-level vote ---
+         # ML ensemble with epoch-level vote 
         print("  [ML] Training ensemble on pooled epochs...")
         ml_probs = predict_ml_epoch_vote(
             train_sids, test_sids, epoch_X, epoch_y,
             n_pd_tr, n_hc_tr, fold_i)
 
-        # --- EEGNet ---
+        # EEGNet
         print("  [CNN] Training EEGNet...")
         cnn_probs = train_eegnet_fold(
             train_sids, test_sids, all_epochs, all_channels,
             labels_map, fixed_ch, n_times, device,
             n_epochs=60, batch_size=32, lr=1e-3)
 
- # --- Combine ML + CNN with weighted vote ---
+         # Combine ML + CNN with weighted vote 
         # Weight by which performs better on training set (approximate)
         final_probs = []
         true_labels = []
@@ -612,10 +607,8 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
             p_final = 0.5 * p_ml + 0.5 * p_cnn
             final_probs.append(p_final)
             true_labels.append(labels_map[sid])
-
          final_probs  = np.array(final_probs)
         true_labels  = np.array(true_labels)
-
         # Youden threshold
         try:
             fpr_t, tpr_t, thr_t = roc_curve(true_labels, final_probs)
