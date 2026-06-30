@@ -622,3 +622,12 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
             thr = float(np.clip(thr_t[np.argmax(tpr_t-fpr_t)], 0.20, 0.80))
         except Exception:
             thr = 0.5
+
+ pred = (final_probs >= thr).astype(int)
+        tn,fp_,fn,tp = confusion_matrix(true_labels,pred).ravel()
+        acc  = accuracy_score(true_labels,pred)
+        auc  = roc_auc_score(true_labels,final_probs)
+        sens = tp/(tp+fn) if (tp+fn)>0 else 0.
+        spec = tn/(tn+fp_) if (tn+fp_)>0 else 0.
+        f1   = f1_score(true_labels,pred,zero_division=0)
+        prec = precision_score(true_labels,pred,zero_division=0)
