@@ -624,30 +624,20 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
         spec = tn/(tn+fp_) if (tn+fp_)>0 else 0.
         f1   = f1_score(true_labels,pred,zero_division=0)
         prec = precision_score(true_labels,pred,zero_division=0)
+ print(f"  --> Fold {fold_i+1}: Acc={acc:.4f}  AUC={auc:.4f}  " f"Sens={sens:.4f}  Spec={spec:.4f}  F1={f1:.4f}  Thr={thr:.3f}")
 
- print(f"  --> Fold {fold_i+1}: Acc={acc:.4f}  AUC={auc:.4f}  "
-              f"Sens={sens:.4f}  Spec={spec:.4f}  F1={f1:.4f}  Thr={thr:.3f}")
-
-        records.append(dict(fold=fold_i+1,acc=acc,auc=auc,sens=sens,
-                            spec=spec,f1=f1,prec=prec,
-                            tp=tp,tn=tn,fp=int(fp_),fn=fn,threshold=thr))
+        records.append(dict(fold=fold_i+1,acc=acc,auc=auc,sens=sens, spec=spec,f1=f1,prec=prec, tp=tp,tn=tn,fp=int(fp_),fn=fn,threshold=thr))
         all_true.extend(true_labels.tolist())
         all_prob.extend(final_probs.tolist())
         all_pred.extend(pred.tolist())
-
  mets = ["acc","auc","sens","spec","f1","prec"]
     agg  = {m:(np.mean([r[m] for r in records]),
                np.std([r[m] for r in records])) for m in mets}
     tn_g,fp_g,fn_g,tp_g = confusion_matrix(all_true,all_pred).ravel()
-
-    return dict(records=records, agg=agg,
-                all_true=all_true, all_prob=all_prob, all_pred=all_pred,
-                global_cm=np.array([[tn_g,fp_g],[fn_g,tp_g]]))
-
+    return dict(records=records, agg=agg, all_true=all_true, all_prob=all_prob, all_pred=all_pred, global_cm=np.array([[tn_g,fp_g],[fn_g,tp_g]]))
 print("\n" + "="*70)
 print("CLASSIFICATION  —  EEGNet CNN + ML Ensemble + Epoch-Level Vote")
 print("="*70)
-result = run_cv(subjects_df, y, epoch_X, epoch_y,
-                all_epochs, all_channels, FIXED_CH, N_TIMES, DEVICE)
+result = run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels, FIXED_CH, N_TIMES, DEVICE)
 
 # STEP 7  —  RESULTS
