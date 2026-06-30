@@ -492,7 +492,6 @@ def engineer(Xtr, Xte, mask_lv, mask_red):
 
 def predict_ml_epoch_vote(train_sids, test_sids, epoch_X, epoch_y, n_pd_tr, n_hc_tr, fold_i):
     """ Pool all training epochs → fit 3 classifiers → predict test epochs → vote. """
-
  # Pool training data
     Xtr_list, ytr_list = [], []
     for sid in train_sids:
@@ -561,8 +560,7 @@ for pipe in pipes:
  return subj_ml_prob
 
 # STEP 6  —  STRATIFIED 5-FOLD CV
-def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
-           fixed_ch, n_times, device, n_folds=5):
+def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,fixed_ch, n_times, device, n_folds=5):
     sids_arr = subjects_df["subject_id"].values
     skf      = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42)
     records  = []
@@ -582,20 +580,17 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
               f"Train: {len(train_sids)} (PD={n_pd_tr} HC={n_hc_tr})  "
               f"Test: {len(test_sids)} "
               f"(PD={int(yte.sum())} HC={int(len(yte)-yte.sum())})")
-
          # ML ensemble with epoch-level vote 
         print("  [ML] Training ensemble on pooled epochs...")
         ml_probs = predict_ml_epoch_vote(
             train_sids, test_sids, epoch_X, epoch_y,
             n_pd_tr, n_hc_tr, fold_i)
-
         # EEGNet
         print("  [CNN] Training EEGNet...")
         cnn_probs = train_eegnet_fold(
             train_sids, test_sids, all_epochs, all_channels,
             labels_map, fixed_ch, n_times, device,
             n_epochs=60, batch_size=32, lr=1e-3)
-
          # Combine ML + CNN with weighted vote 
         # Weight by which performs better on training set (approximate)
         final_probs = []
