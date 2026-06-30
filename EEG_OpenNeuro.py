@@ -577,6 +577,11 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
         test_sids  = list(sids_arr[tei])
         ytr        = y[tri]; yte = y[tei]
         n_pd_tr    = int(ytr.sum()); n_hc_tr = int(len(ytr)-n_pd_tr)
-    print(f"\nStratified {n_folds}-Fold CV  "
+    print(f"\nStratified {n_folds}-Fold CV  "\
+          print(f"\nFold {fold_i+1}  "
+              f"Train: {len(train_sids)} (PD={n_pd_tr} HC={n_hc_tr})  "
+              f"Test: {len(test_sids)} "
+              f"(PD={int(yte.sum())} HC={int(len(yte)-yte.sum())})")
+
           f"n={len(y)} PD={n_pd_tot} HC={n_hc_tot}")
     print("="*70)
