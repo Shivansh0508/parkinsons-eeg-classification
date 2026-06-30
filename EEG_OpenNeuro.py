@@ -600,3 +600,15 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
             train_sids, test_sids, all_epochs, all_channels,
             labels_map, fixed_ch, n_times, device,
             n_epochs=60, batch_size=32, lr=1e-3)
+
+ # --- Combine ML + CNN with weighted vote ---
+        # Weight by which performs better on training set (approximate)
+        final_probs = []
+        true_labels = []
+        for sid in test_sids:
+            p_ml  = ml_probs.get(sid, 0.5)
+            p_cnn = cnn_probs.get(sid, 0.5)
+            # Equal weight — adjust after seeing results
+            p_final = 0.5 * p_ml + 0.5 * p_cnn
+            final_probs.append(p_final)
+            true_labels.append(labels_map[sid])
