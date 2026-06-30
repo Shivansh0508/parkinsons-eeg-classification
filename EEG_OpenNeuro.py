@@ -612,3 +612,13 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
             p_final = 0.5 * p_ml + 0.5 * p_cnn
             final_probs.append(p_final)
             true_labels.append(labels_map[sid])
+
+ final_probs  = np.array(final_probs)
+        true_labels  = np.array(true_labels)
+
+        # Youden threshold
+        try:
+            fpr_t, tpr_t, thr_t = roc_curve(true_labels, final_probs)
+            thr = float(np.clip(thr_t[np.argmax(tpr_t-fpr_t)], 0.20, 0.80))
+        except Exception:
+            thr = 0.5
