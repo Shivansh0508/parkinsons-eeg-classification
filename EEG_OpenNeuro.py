@@ -613,7 +613,7 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
             final_probs.append(p_final)
             true_labels.append(labels_map[sid])
 
- final_probs  = np.array(final_probs)
+         final_probs  = np.array(final_probs)
         true_labels  = np.array(true_labels)
 
         # Youden threshold
@@ -623,7 +623,7 @@ def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels,
         except Exception:
             thr = 0.5
 
- pred = (final_probs >= thr).astype(int)
+        pred = (final_probs >= thr).astype(int)
         tn,fp_,fn,tp = confusion_matrix(true_labels,pred).ravel()
         acc  = accuracy_score(true_labels,pred)
         auc  = roc_auc_score(true_labels,final_probs)
