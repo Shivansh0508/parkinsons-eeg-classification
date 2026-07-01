@@ -661,14 +661,12 @@ n_pd_tot = int(y.sum()); n_hc_tot = int(len(y)-n_pd_tot)
         ml_probs = predict_ml_epoch_vote(
             train_sids, test_sids, epoch_X, epoch_y,
             n_pd_tr, n_hc_tr, fold_i)
-
         # EEGNet 
         print("  [CNN] Training EEGNet...")
         cnn_probs = train_eegnet_fold(
             train_sids, test_sids, all_epochs, all_channels,
             labels_map, fixed_ch, n_times, device,
             n_epochs=60, batch_size=32, lr=1e-3)
-
         # Combine ML + CNN with weighted vote 
         # Weight by which performs better on training set (approximate)
 final_probs = []
@@ -680,17 +678,14 @@ final_probs = []
             p_final = 0.5 * p_ml + 0.5 * p_cnn
             final_probs.append(p_final)
             true_labels.append(labels_map[sid])
-
         final_probs  = np.array(final_probs)
         true_labels  = np.array(true_labels)
-
  # Youden threshold
         try:
             fpr_t, tpr_t, thr_t = roc_curve(true_labels, final_probs)
             thr = float(np.clip(thr_t[np.argmax(tpr_t-fpr_t)], 0.20, 0.80))
         except Exception:
             thr = 0.5
-
   pred = (final_probs >= thr).astype(int)
         tn,fp_,fn,tp = confusion_matrix(true_labels,pred).ravel()
         acc  = accuracy_score(true_labels,pred)
@@ -699,30 +694,23 @@ final_probs = []
         spec = tn/(tn+fp_) if (tn+fp_)>0 else 0.
         f1   = f1_score(true_labels,pred,zero_division=0)
         prec = precision_score(true_labels,pred,zero_division=0)
-
  print(f"  --> Fold {fold_i+1}: Acc={acc:.4f}  AUC={auc:.4f}  "
               f"Sens={sens:.4f}  Spec={spec:.4f}  F1={f1:.4f}  Thr={thr:.3f}")
 
-        records.append(dict(fold=fold_i+1,acc=acc,auc=auc,sens=sens,
-                            spec=spec,f1=f1,prec=prec,
-                            tp=tp,tn=tn,fp=int(fp_),fn=fn,threshold=thr))
+        records.append(dict(fold=fold_i+1,acc=acc,auc=auc,sens=sens, spec=spec,f1=f1,prec=prec,tp=tp,tn=tn,fp=int(fp_),fn=fn,threshold=thr))
         all_true.extend(true_labels.tolist())
         all_prob.extend(final_probs.tolist())
         all_pred.extend(pred.tolist())
-
  mets = ["acc","auc","sens","spec","f1","prec"]
     agg  = {m:(np.mean([r[m] for r in records]),
                np.std([r[m] for r in records])) for m in mets}
     tn_g,fp_g,fn_g,tp_g = confusion_matrix(all_true,all_pred).ravel()
-
     return dict(records=records, agg=agg,
-                all_true=all_true, all_prob=all_prob, all_pred=all_pred,
-                global_cm=np.array([[tn_g,fp_g],[fn_g,tp_g]]))
+                all_true=all_true, all_prob=all_prob, all_pred=all_pred,global_cm=np.array([[tn_g,fp_g],[fn_g,tp_g]]))
 
 print("\n" + "="*70)
 print("CLASSIFICATION  —  EEGNet CNN + ML Ensemble + Epoch-Level Vote")
 print("="*70)
-result = run_cv(subjects_df, y, epoch_X, epoch_y,
-                all_epochs, all_channels, FIXED_CH, N_TIMES, DEVICE)
+result = run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels, FIXED_CH, N_TIMES, DEVICE)
 
 # STEP 7  —  RESULTS
