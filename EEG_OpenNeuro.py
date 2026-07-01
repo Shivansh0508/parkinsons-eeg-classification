@@ -677,3 +677,15 @@ n_pd_tot = int(y.sum()); n_hc_tot = int(len(y)-n_pd_tot)
 
         # --- Combine ML + CNN with weighted vote ---
         # Weight by which performs better on training set (approximate)
+final_probs = []
+        true_labels = []
+        for sid in test_sids:
+            p_ml  = ml_probs.get(sid, 0.5)
+            p_cnn = cnn_probs.get(sid, 0.5)
+            # Equal weight — adjust after seeing results
+            p_final = 0.5 * p_ml + 0.5 * p_cnn
+            final_probs.append(p_final)
+            true_labels.append(labels_map[sid])
+
+        final_probs  = np.array(final_probs)
+        true_labels  = np.array(true_labels)
