@@ -724,3 +724,9 @@ final_probs = []
     return dict(records=records, agg=agg,
                 all_true=all_true, all_prob=all_prob, all_pred=all_pred,
                 global_cm=np.array([[tn_g,fp_g],[fn_g,tp_g]]))
+
+print("\n" + "="*70)
+print("CLASSIFICATION  —  EEGNet CNN + ML Ensemble + Epoch-Level Vote")
+print("="*70)
+result = run_cv(subjects_df, y, epoch_X, epoch_y,
+                all_epochs, all_channels, FIXED_CH, N_TIMES, DEVICE)
