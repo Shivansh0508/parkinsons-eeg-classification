@@ -656,3 +656,14 @@ n_pd_tot = int(y.sum()); n_hc_tot = int(len(y)-n_pd_tot)
         test_sids  = list(sids_arr[tei])
         ytr        = y[tri]; yte = y[tei]
         n_pd_tr    = int(ytr.sum()); n_hc_tr = int(len(ytr)-n_pd_tr)
+
+ print(f"\nFold {fold_i+1}  "
+              f"Train: {len(train_sids)} (PD={n_pd_tr} HC={n_hc_tr})  "
+              f"Test: {len(test_sids)} "
+              f"(PD={int(yte.sum())} HC={int(len(yte)-yte.sum())})")
+
+        # --- ML ensemble with epoch-level vote ---
+        print("  [ML] Training ensemble on pooled epochs...")
+        ml_probs = predict_ml_epoch_vote(
+            train_sids, test_sids, epoch_X, epoch_y,
+            n_pd_tr, n_hc_tr, fold_i)
