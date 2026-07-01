@@ -706,3 +706,12 @@ final_probs = []
         f1   = f1_score(true_labels,pred,zero_division=0)
         prec = precision_score(true_labels,pred,zero_division=0)
 
+ print(f"  --> Fold {fold_i+1}: Acc={acc:.4f}  AUC={auc:.4f}  "
+              f"Sens={sens:.4f}  Spec={spec:.4f}  F1={f1:.4f}  Thr={thr:.3f}")
+
+        records.append(dict(fold=fold_i+1,acc=acc,auc=auc,sens=sens,
+                            spec=spec,f1=f1,prec=prec,
+                            tp=tp,tn=tn,fp=int(fp_),fn=fn,threshold=thr))
+        all_true.extend(true_labels.tolist())
+        all_prob.extend(final_probs.tolist())
+        all_pred.extend(pred.tolist())
