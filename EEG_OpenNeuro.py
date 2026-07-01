@@ -639,6 +639,14 @@ result = run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels, FIXE
 def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels, fixed_ch, n_times, device, n_folds=5):
 
     sids_arr = subjects_df["subject_id"].values
-    skf      = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42)
-    records  = []
+    skf = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42)
+    records = []
     all_true, all_prob, all_pred = [], [], []
+
+n_pd_tot = int(y.sum()); n_hc_tot = int(len(y)-n_pd_tot)
+    labels_map = {row.subject_id: row.label
+                  for _, row in subjects_df.iterrows()}
+
+    print(f"\nStratified {n_folds}-Fold CV  "
+          f"n={len(y)} PD={n_pd_tot} HC={n_hc_tot}")
+    print("="*70)
