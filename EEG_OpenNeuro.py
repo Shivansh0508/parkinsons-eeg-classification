@@ -636,3 +636,9 @@ print("="*70)
 result = run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels, FIXED_CH, N_TIMES, DEVICE)
 
 # STEP 7  —  RESULTS
+def run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels, fixed_ch, n_times, device, n_folds=5):
+
+    sids_arr = subjects_df["subject_id"].values
+    skf      = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42)
+    records  = []
+    all_true, all_prob, all_pred = [], [], []
