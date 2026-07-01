@@ -667,3 +667,13 @@ n_pd_tot = int(y.sum()); n_hc_tot = int(len(y)-n_pd_tot)
         ml_probs = predict_ml_epoch_vote(
             train_sids, test_sids, epoch_X, epoch_y,
             n_pd_tr, n_hc_tr, fold_i)
+
+# --- EEGNet ---
+        print("  [CNN] Training EEGNet...")
+        cnn_probs = train_eegnet_fold(
+            train_sids, test_sids, all_epochs, all_channels,
+            labels_map, fixed_ch, n_times, device,
+            n_epochs=60, batch_size=32, lr=1e-3)
+
+        # --- Combine ML + CNN with weighted vote ---
+        # Weight by which performs better on training set (approximate)
