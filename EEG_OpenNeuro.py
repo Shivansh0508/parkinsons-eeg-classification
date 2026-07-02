@@ -797,3 +797,12 @@ def plot_results(result, y, out_dir):
     ax5.plot(folds,[r['spec'] for r in result['records']],'s-',color='#1565C0',lw=2,label='Spec')
     ax5.set(xlabel="Fold",ylim=[0,1.05],title="Sens & Spec per Fold")
     ax5.legend(fontsize=8); ax5.grid(alpha=0.3)
+
+     out = os.path.join(out_dir,"eeg_results_v3.png")
+     plt.savefig(out,dpi=180,bbox_inches='tight',facecolor='white')
+     print(f"\nFigure: {out}"); plt.close()
+
+
+plot_results(result, y, CONFIG["OUT_DIR"])
+
+# Save CSV
