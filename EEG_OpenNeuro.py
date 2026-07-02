@@ -766,3 +766,11 @@ def plot_results(result, y, out_dir):
     ax1.plot(fpr,tpr,'#1565C0',lw=3,label=f"Our model  AUC={auc_g:.4f}")
     ax1.set(xlabel="FPR",ylabel="TPR",title="ROC Curve",xlim=[0,1],ylim=[0,1.05])
     ax1.legend(fontsize=10); ax1.grid(alpha=0.2)
+
+    ax2 = fig.add_subplot(gs[0,2])
+    folds=[r['fold'] for r in result['records']]; x=np.arange(len(folds)); w=0.35
+    ax2.bar(x-w/2,[r['acc'] for r in result['records']],w,label='Acc',color='#42A5F5',alpha=0.85)
+    ax2.bar(x+w/2,[r['auc'] for r in result['records']],w,label='AUC',color='#66BB6A',alpha=0.85)
+    ax2.axhline(agg['auc'][0],color='#2E7D32',ls='--',lw=1.5,alpha=0.7)
+    ax2.set(xticks=x,xticklabels=[f"F{f}" for f in folds],ylim=[0,1.05],title="Per-Fold")
+    ax2.legend(fontsize=8); ax2.grid(axis='y',alpha=0.3)
