@@ -758,3 +758,11 @@ def plot_results(result, y, out_dir):
     fig.suptitle("EEG PD vs HC  —  DS007526\n"
                  "EEGNet CNN + ML Ensemble + Epoch-Level Majority Vote",
                  fontsize=12,fontweight='bold')
+    
+    ax1 = fig.add_subplot(gs[0,:2])
+    fpr,tpr,_ = roc_curve(result['all_true'],result['all_prob'])
+    auc_g = roc_auc_score(result['all_true'],result['all_prob'])
+    ax1.plot([0,1],[0,1],'k--',alpha=0.2)
+    ax1.plot(fpr,tpr,'#1565C0',lw=3,label=f"Our model  AUC={auc_g:.4f}")
+    ax1.set(xlabel="FPR",ylabel="TPR",title="ROC Curve",xlim=[0,1],ylim=[0,1.05])
+    ax1.legend(fontsize=10); ax1.grid(alpha=0.2)
