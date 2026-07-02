@@ -722,3 +722,10 @@ def print_results(result, y):
     print("="*85)
     print(f"{'Fold':>4}  {'Acc':>7} {'AUC':>7} {'Sens':>7} {'Spec':>7} "f"{'F1':>7} {'Prec':>7}  {'TP':>3}{'TN':>4}{'FP':>4}{'FN':>4}  {'Thr':>5}")
     print("-"*85)
+    for r in result['records']:
+        print(f"{r['fold']:>4}  "
+              f"{r['acc']*100:>6.2f}% {r['auc']:>7.4f} "
+              f"{r['sens']*100:>6.2f}% {r['spec']*100:>6.2f}% "
+              f"{r['f1']:>7.4f} {r['prec']:>7.4f}  "
+              f"{r['tp']:>3}{r['tn']:>4}{r['fp']:>4}{r['fn']:>4}  "
+              f"{r['threshold']:>5.3f}")
