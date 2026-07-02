@@ -816,3 +816,12 @@ for r in result['records']:
         TP=r['tp'],TN=r['tn'],FP=r['fp'],FN=r['fn'],
         threshold=round(r['threshold'],3)))
 for tag,idx in [('MEAN',0),('STD',1)]:
+
+rows_csv.append(dict(fold=tag,
+        accuracy=round(agg['acc'][idx],4),AUC=round(agg['auc'][idx],4),
+        sensitivity=round(agg['sens'][idx],4),specificity=round(agg['spec'][idx],4),
+        F1=round(agg['f1'][idx],4),precision=round(agg['prec'][idx],4),
+        TP='',TN='',FP='',FN='',threshold=''))
+csv_path = os.path.join(CONFIG["OUT_DIR"],"eeg_metrics_v3.csv")
+pd.DataFrame(rows_csv).to_csv(csv_path,index=False)
+print(f"Metrics: {csv_path}")
