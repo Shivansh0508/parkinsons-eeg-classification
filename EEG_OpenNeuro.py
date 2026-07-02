@@ -763,10 +763,7 @@ def plot_results(result, y, out_dir):
 
     ax3 = fig.add_subplot(gs[1,0])
     cm  = result['global_cm']
-    sns.heatmap(cm,annot=True,fmt='d',cmap='Blues',
-                xticklabels=['Pred HC','Pred PD'],
-                yticklabels=['True HC','True PD'],
-                ax=ax3,cbar=False,annot_kws={"size":14})
+    sns.heatmap(cm,annot=True,fmt='d',cmap='Blues', xticklabels=['Pred HC','Pred PD'], yticklabels=['True HC','True PD'], ax=ax3,cbar=False,annot_kws={"size":14})
     tn_v,fp_v,fn_v,tp_v = cm[0,0],cm[0,1],cm[1,0],cm[1,1]
     ax3.set_title(f"Global CM\nSens={tp_v/(tp_v+fn_v+1e-8):.3f}  " f"Spec={tn_v/(tn_v+fp_v+1e-8):.3f}",fontsize=10)
 
@@ -787,7 +784,6 @@ def plot_results(result, y, out_dir):
      out = os.path.join(out_dir,"eeg_results_v3.png")
      plt.savefig(out,dpi=180,bbox_inches='tight',facecolor='white')
      print(f"\nFigure: {out}"); plt.close()
-
 
 plot_results(result, y, CONFIG["OUT_DIR"])
 
