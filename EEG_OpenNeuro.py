@@ -749,3 +749,12 @@ print("="*85)
         if m in ('acc','sens','spec'): print(f"  {lbl:12s}: {v*100:.2f}%")
         else: print(f"  {lbl:12s}: {v:.4f}")
 print_results(result, y)
+
+# Plot
+def plot_results(result, y, out_dir):
+    agg = result['agg']
+    fig = plt.figure(figsize=(18,10))
+    gs  = gridspec.GridSpec(2,3,figure=fig,hspace=0.42,wspace=0.35)
+    fig.suptitle("EEG PD vs HC  —  DS007526\n"
+                 "EEGNet CNN + ML Ensemble + Epoch-Level Majority Vote",
+                 fontsize=12,fontweight='bold')
