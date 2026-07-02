@@ -714,3 +714,11 @@ print("="*70)
 result = run_cv(subjects_df, y, epoch_X, epoch_y, all_epochs, all_channels, FIXED_CH, N_TIMES, DEVICE)
 
 # STEP 7  —  RESULTS
+def print_results(result, y):
+    agg = result['agg']
+    print("\n" + "="*85)
+    print("FINAL RESULTS  (Stratified 5-Fold CV, epoch-level vote)")
+    print(f"Dataset: DS007526  PD={int(y.sum())}  HC={int(len(y)-y.sum())}")
+    print("="*85)
+    print(f"{'Fold':>4}  {'Acc':>7} {'AUC':>7} {'Sens':>7} {'Spec':>7} "f"{'F1':>7} {'Prec':>7}  {'TP':>3}{'TN':>4}{'FP':>4}{'FN':>4}  {'Thr':>5}")
+    print("-"*85)
