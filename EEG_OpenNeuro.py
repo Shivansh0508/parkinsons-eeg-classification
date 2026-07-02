@@ -806,3 +806,13 @@ def plot_results(result, y, out_dir):
 plot_results(result, y, CONFIG["OUT_DIR"])
 
 # Save CSV
+agg = result['agg']
+rows_csv = []
+for r in result['records']:
+    rows_csv.append(dict(fold=r['fold'],accuracy=round(r['acc'],4),
+        AUC=round(r['auc'],4),sensitivity=round(r['sens'],4),
+        specificity=round(r['spec'],4),F1=round(r['f1'],4),
+        precision=round(r['prec'],4),
+        TP=r['tp'],TN=r['tn'],FP=r['fp'],FN=r['fn'],
+        threshold=round(r['threshold'],3)))
+for tag,idx in [('MEAN',0),('STD',1)]:
