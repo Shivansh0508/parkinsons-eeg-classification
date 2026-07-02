@@ -784,10 +784,16 @@ def plot_results(result, y, out_dir):
     tn_v,fp_v,fn_v,tp_v = cm[0,0],cm[0,1],cm[1,0],cm[1,1]
     ax3.set_title(f"Global CM\nSens={tp_v/(tp_v+fn_v+1e-8):.3f}  " f"Spec={tn_v/(tn_v+fp_v+1e-8):.3f}",fontsize=10)
 
-     ax4 = fig.add_subplot(gs[1,1])
+    ax4 = fig.add_subplot(gs[1,1])
     mns=["Acc","AUC","Sens","Spec"]
     ov=[agg['acc'][0],agg['auc'][0],agg['sens'][0],agg['spec'][0]]
     ax4.bar(np.arange(4),ov,0.6,color=['#42A5F5','#66BB6A','#EF5350','#AB47BC'],alpha=0.9)
     ax4.axhline(0.8,color='red',ls='--',lw=1,alpha=0.4)
     ax4.set(xticks=np.arange(4),xticklabels=mns,ylim=[0,1.05],title="Mean Metrics")
     ax4.grid(axis='y',alpha=0.3)
+
+    ax5 = fig.add_subplot(gs[1,2])
+    ax5.plot(folds,[r['sens'] for r in result['records']],'o-',color='#E53935',lw=2,label='Sens')
+    ax5.plot(folds,[r['spec'] for r in result['records']],'s-',color='#1565C0',lw=2,label='Spec')
+    ax5.set(xlabel="Fold",ylim=[0,1.05],title="Sens & Spec per Fold")
+    ax5.legend(fontsize=8); ax5.grid(alpha=0.3)
