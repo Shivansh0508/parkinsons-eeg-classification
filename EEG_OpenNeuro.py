@@ -738,3 +738,14 @@ print("-"*85)
           f"{agg['acc'][1]*100:>6.2f}% {agg['auc'][1]:>7.4f} "
           f"{agg['sens'][1]*100:>6.2f}% {agg['spec'][1]*100:>6.2f}% "
           f"{agg['f1'][1]:>7.4f} {agg['prec'][1]:>7.4f}")
+print("="*85)
+    cm = result['global_cm']
+    print(f"\nGlobal CM:  HC->HC={cm[0,0]}  HC->PD={cm[0,1]}  "
+          f"PD->HC={cm[1,0]}  PD->PD={cm[1,1]}")
+    print("\nSummary:")
+    for m,lbl in [('acc','Accuracy'),('auc','AUC-ROC'),('sens','Sensitivity'),
+                  ('spec','Specificity'),('f1','F1'),('prec','Precision')]:
+        v = agg[m][0]
+        if m in ('acc','sens','spec'): print(f"  {lbl:12s}: {v*100:.2f}%")
+        else: print(f"  {lbl:12s}: {v:.4f}")
+print_results(result, y)
