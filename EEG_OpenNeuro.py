@@ -723,28 +723,16 @@ def print_results(result, y):
     print(f"{'Fold':>4}  {'Acc':>7} {'AUC':>7} {'Sens':>7} {'Spec':>7} "f"{'F1':>7} {'Prec':>7}  {'TP':>3}{'TN':>4}{'FP':>4}{'FN':>4}  {'Thr':>5}")
     print("-"*85)
     for r in result['records']:
-        print(f"{r['fold']:>4}  "
-              f"{r['acc']*100:>6.2f}% {r['auc']:>7.4f} "
-              f"{r['sens']*100:>6.2f}% {r['spec']*100:>6.2f}% "
-              f"{r['f1']:>7.4f} {r['prec']:>7.4f}  "
-              f"{r['tp']:>3}{r['tn']:>4}{r['fp']:>4}{r['fn']:>4}  "
-              f"{r['threshold']:>5.3f}")
+        print(f"{r['fold']:>4} "f"{r['acc']*100:>6.2f}% {r['auc']:>7.4f} "f"{r['sens']*100:>6.2f}% {r['spec']*100:>6.2f}% "f"{r['f1']:>7.4f} {r['prec']:>7.4f}  "f"{r['tp']:>3}{r['tn']:>4}{r['fp']:>4}{r['fn']:>4}  "f"{r['threshold']:>5.3f}")
 print("-"*85)
     print(f"{'Mean':>4}  "
-          f"{agg['acc'][0]*100:>6.2f}% {agg['auc'][0]:>7.4f} "
-          f"{agg['sens'][0]*100:>6.2f}% {agg['spec'][0]*100:>6.2f}% "
-          f"{agg['f1'][0]:>7.4f} {agg['prec'][0]:>7.4f}")
-    print(f"{'Std':>4}  "
-          f"{agg['acc'][1]*100:>6.2f}% {agg['auc'][1]:>7.4f} "
-          f"{agg['sens'][1]*100:>6.2f}% {agg['spec'][1]*100:>6.2f}% "
-          f"{agg['f1'][1]:>7.4f} {agg['prec'][1]:>7.4f}")
+          f"{agg['acc'][0]*100:>6.2f}% {agg['auc'][0]:>7.4f} "f"{agg['sens'][0]*100:>6.2f}% {agg['spec'][0]*100:>6.2f}% " f"{agg['f1'][0]:>7.4f} {agg['prec'][0]:>7.4f}")
+    print(f"{'Std':>4} "f"{agg['acc'][1]*100:>6.2f}% {agg['auc'][1]:>7.4f} "f"{agg['sens'][1]*100:>6.2f}% {agg['spec'][1]*100:>6.2f}% "f"{agg['f1'][1]:>7.4f} {agg['prec'][1]:>7.4f}")
 print("="*85)
     cm = result['global_cm']
-    print(f"\nGlobal CM:  HC->HC={cm[0,0]}  HC->PD={cm[0,1]}  "
-          f"PD->HC={cm[1,0]}  PD->PD={cm[1,1]}")
+    print(f"\nGlobal CM:  HC->HC={cm[0,0]}  HC->PD={cm[0,1]}"f"PD->HC={cm[1,0]}  PD->PD={cm[1,1]}")
     print("\nSummary:")
-    for m,lbl in [('acc','Accuracy'),('auc','AUC-ROC'),('sens','Sensitivity'),
-                  ('spec','Specificity'),('f1','F1'),('prec','Precision')]:
+    for m,lbl in [('acc','Accuracy'),('auc','AUC-ROC'),('sens','Sensitivity'),('spec','Specificity'),('f1','F1'),('prec','Precision')]:
         v = agg[m][0]
         if m in ('acc','sens','spec'): print(f"  {lbl:12s}: {v*100:.2f}%")
         else: print(f"  {lbl:12s}: {v:.4f}")
@@ -755,9 +743,7 @@ def plot_results(result, y, out_dir):
     agg = result['agg']
     fig = plt.figure(figsize=(18,10))
     gs  = gridspec.GridSpec(2,3,figure=fig,hspace=0.42,wspace=0.35)
-    fig.suptitle("EEG PD vs HC  —  DS007526\n"
-                 "EEGNet CNN + ML Ensemble + Epoch-Level Majority Vote",
-                 fontsize=12,fontweight='bold')
+    fig.suptitle("EEG PD vs HC  —  DS007526\n" "EEGNet CNN + ML Ensemble + Epoch-Level Majority Vote",fontsize=12,fontweight='bold')
     
     ax1 = fig.add_subplot(gs[0,:2])
     fpr,tpr,_ = roc_curve(result['all_true'],result['all_prob'])
