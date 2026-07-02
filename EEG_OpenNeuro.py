@@ -774,3 +774,12 @@ def plot_results(result, y, out_dir):
     ax2.axhline(agg['auc'][0],color='#2E7D32',ls='--',lw=1.5,alpha=0.7)
     ax2.set(xticks=x,xticklabels=[f"F{f}" for f in folds],ylim=[0,1.05],title="Per-Fold")
     ax2.legend(fontsize=8); ax2.grid(axis='y',alpha=0.3)
+
+    ax3 = fig.add_subplot(gs[1,0])
+    cm  = result['global_cm']
+    sns.heatmap(cm,annot=True,fmt='d',cmap='Blues',
+                xticklabels=['Pred HC','Pred PD'],
+                yticklabels=['True HC','True PD'],
+                ax=ax3,cbar=False,annot_kws={"size":14})
+    tn_v,fp_v,fn_v,tp_v = cm[0,0],cm[0,1],cm[1,0],cm[1,1]
+    ax3.set_title(f"Global CM\nSens={tp_v/(tp_v+fn_v+1e-8):.3f}  " f"Spec={tn_v/(tn_v+fp_v+1e-8):.3f}",fontsize=10)
